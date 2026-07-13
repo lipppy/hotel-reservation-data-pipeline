@@ -177,3 +177,82 @@ git push
 
 If Git reports a conflict, rejects a command, or you are unsure what to
 do, stop and ask for help instead of trying random commands.
+
+
+## Docker Basics
+
+Docker runs applications in containers so your local machine setup is less important.
+
+### Start containers
+
+``` bash
+docker compose up -d
+```
+
+Builds images if needed and starts services in the background.
+
+### Check running services
+
+``` bash
+docker compose ps
+```
+
+Shows which services are running and on which ports.
+
+### See logs
+
+``` bash
+docker compose logs -f
+```
+
+Shows live output from containers. Press `Ctrl+C` to stop viewing logs.
+
+### Open a shell inside a container
+
+``` bash
+docker compose exec <service_name> /bin/bash
+```
+
+If bash is not available in the image, use:
+
+``` bash
+docker compose exec <service_name> /bin/sh
+```
+
+After entering the container, you can run app commands, for example:
+
+``` bash
+python your_file.py
+```
+
+### Run a one-off command
+
+``` bash
+docker compose run --rm <service_name> python your_file.py
+```
+
+Runs a command in a temporary container and removes it after exit.
+
+### Stop containers
+
+``` bash
+docker compose down
+```
+
+Stops and removes containers, networks, and default compose resources.
+
+### Recommended Workflow
+
+``` text
+docker compose up -d
+    ↓
+docker compose ps
+    ↓
+docker compose exec <service_name> /bin/bash
+    ↓
+python your_file.py
+    ↓
+docker compose down
+```
+
+If a container does not start, first run `docker compose logs -f` and check the first error line.
