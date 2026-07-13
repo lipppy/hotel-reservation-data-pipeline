@@ -51,6 +51,7 @@ services:
       - "3306:3306" # exposes MySQL on the host too, e.g. for a local GUI client
     volumes:
       - mysql_data:/var/lib/mysql # named volume so data survives `docker compose down`
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro # creates the "reservations" table on first start
     healthcheck:
       # Lets other services (via depends_on) wait for MySQL to be ready instead of guessing with a sleep.
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
