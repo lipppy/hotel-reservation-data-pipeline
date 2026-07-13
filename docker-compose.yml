@@ -1,9 +1,18 @@
 services:
   python:
-    image: python:3.12-slim
+    build:
+      context: .
+      dockerfile: Dockerfile.python
     working_dir: /workspace
     volumes:
       - ./:/workspace
     stdin_open: true
     tty: true
     command: ["sleep", "infinity"]
+
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro

@@ -1,0 +1,4 @@
+# Add Python dependencies here, one package per line.
+# Example:
+# requests==2.32.3
+requests==2.32.3

@@ -5,7 +5,7 @@ SERVICE = python
 
 help:
 	@echo "Targets:"
-	@echo "  make up                - Start container in background"
+	@echo "  make up                - Build image and start container in background"
 	@echo "  make down              - Stop and remove container"
 	@echo "  make shell             - Open interactive Python shell"
 	@echo "  make exec              - Open Python shell in running container"
@@ -14,13 +14,13 @@ help:
 
 
 up:
-	$(COMPOSE) up -d
+	$(COMPOSE) up -d --build
 
 down:
 	$(COMPOSE) down
 
 shell:
-	$(COMPOSE) run --rm $(SERVICE) python
+	$(COMPOSE) run --rm --build $(SERVICE) python
 
 exec:
 	$(COMPOSE) exec $(SERVICE) python
@@ -30,4 +30,4 @@ bash:
 
 run:
 	@if [ -z "$(FILE)" ]; then echo "Usage: make run FILE=path/to/script.py"; exit 1; fi
-	$(COMPOSE) run --rm $(SERVICE) python $(FILE)
+	$(COMPOSE) run --rm --build $(SERVICE) python $(FILE)
