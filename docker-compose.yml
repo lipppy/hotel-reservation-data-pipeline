@@ -9,6 +9,27 @@ services:
     stdin_open: true
     tty: true
     command: ["sleep", "infinity"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-hotel_reservations}
+      MYSQL_USER: ${MYSQL_USER:-app}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-app}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   web:
     image: nginx:alpine
@@ -16,3 +37,6 @@ services:
       - "8080:80"
     volumes:
       - ./index.html:/usr/share/nginx/html/index.html:ro
+
+volumes:
+  mysql_data:
