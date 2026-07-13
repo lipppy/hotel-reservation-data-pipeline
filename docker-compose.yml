@@ -1,52 +1,102 @@
+# Docker Compose file for the hotel reservation data pipeline.
+#
+# This file defines every container ("service") the project needs and how
+# they are wired together. Run `make up` (or `docker compose up -d --build`)
+# to start all of them at once.
+#
+# Dependency direction (who waits for whom to be ready before starting):
+#
+#   web (nginx, browser-facing dashboard)
+#     -> api (Flask backend)
+#          -> db (MySQL)
+#
+#   python (scratch/dev container)
+#     -> db (MySQL)
+#
+#   adminer (database admin UI)
+#     -> db (MySQL)
+#
+# In other words, "db" has no dependencies and must start first; everything
+# else depends on it directly or indirectly.
+
 services:
+  # General-purpose Python container for running scripts (e.g. main.py,
+  # fetch_apaleo_reservations.py) and opening a shell/bash session.
+  # Serves as a scratchpad for development and experimentation.
   python:
     build:
       context: .
       dockerfile: Dockerfile.python
     working_dir: /workspace
     volumes:
-      - ./:/workspace
+      - ./:/workspace # mount the project folder so code edits are picked up without rebuilding
     stdin_open: true
     tty: true
-    command: ["sleep", "infinity"]
+    command: ["sleep", "infinity"] # keep the container running so `make exec`/`make bash` can attach to it
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy # wait until MySQL is actually accepting connections, not just started
 
+  # MySQL database. Stores the reservation data long-term.
   db:
     image: mysql:8.0
     restart: unless-stopped
     environment:
+      # Values come from .env (see .env.example); defaults below are only used if .env is missing.
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-hotel_reservations}
       MYSQL_USER: ${MYSQL_USER:-app}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-app}
     ports:
-      - "3306:3306"
+      - "3306:3306" # exposes MySQL on the host too, e.g. for a local GUI client
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql # named volume so data survives `docker compose down`
     healthcheck:
+      # Lets other services (via depends_on) wait for MySQL to be ready instead of guessing with a sleep.
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
       interval: 5s
       timeout: 5s
       retries: 10
 
+  # Adminer: a simple web UI for browsing/editing the MySQL database.
   adminer:
     image: adminer
     restart: unless-stopped
     environment:
-      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DEFAULT_SERVER: db # pre-fills the "Server" field with our db service name
     ports:
-      - "8081:8080"
+      - "8081:8080" # open http://localhost:8081 in a browser
     depends_on:
       db:
         condition: service_healthy
+
+  # Backend API (Flask) that will read from the database and serve JSON
+  # to the dashboard in index.html. Currently just a placeholder.
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    command: ["python", "-m", "flask", "--app", "api", "run", "--host", "0.0.0.0", "--port", "5000"]
+    ports:
+      - "5000:5000" # lets you call the API directly, e.g. http://localhost:5000/api/reservations
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Nginx serving the static dashboard (index.html) and forwarding any
+  # /api/... request to the api service (see nginx.conf).
   web:
     image: nginx:alpine
     ports:
-      - "8080:80"
+      - "8080:80" # open http://localhost:8080 in a browser to see the dashboard
     volumes:
       - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
 
 volumes:
-  mysql_data:
+  mysql_data: # persists MySQL data on the host between container restarts
