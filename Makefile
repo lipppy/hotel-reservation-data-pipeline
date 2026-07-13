@@ -1,11 +1,12 @@
 COMPOSE = docker compose
 SERVICE = python
 
-.PHONY: help up down shell exec bash run py
+.PHONY: help up up-clean down shell exec bash run py
 
 help:
 	@echo "Targets:"
 	@echo "  make up                - Build image and start container in background"
+	@echo "  make up-clean          - Remove containers, volumes and images, then start fresh"
 	@echo "  make down              - Stop and remove container"
 	@echo "  make shell             - Open interactive Python shell"
 	@echo "  make exec              - Open Python shell in running container"
@@ -14,6 +15,10 @@ help:
 	@echo "  make init-env          - Create .env file from .env.example"
 
 up:
+	$(COMPOSE) up -d --build
+
+up-clean:
+	$(COMPOSE) down --volumes --remove-orphans --rmi local
 	$(COMPOSE) up -d --build
 
 down:
