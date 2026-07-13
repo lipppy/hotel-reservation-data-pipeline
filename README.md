@@ -98,6 +98,15 @@ Changes in the project folder are immediately visible inside the container via b
 Git tracks changes in the project and allows you to return to an earlier
 version if something goes wrong.
 
+### Clone the repository (first time only)
+
+``` bash
+git clone <repo-url>
+cd hotel-reservation-data-pipeline
+```
+
+Use your repository URL from GitHub (HTTPS or SSH).
+
 ### Check the current state
 
 ``` bash
@@ -153,16 +162,18 @@ what you changed.
 git push
 ```
 
-Uploads your commits to the remote repository.
+Uploads commits from your current branch to GitHub.
 
-### Recommended Workflow
+### Recommended workflow (simple, no feature branch)
 
 ``` text
-git fetch
+git clone <repo-url>    (first time only)
+    ↓
+cd hotel-reservation-data-pipeline
     ↓
 git pull
     ↓
-make changes
+make some code changes
     ↓
 git status
     ↓
@@ -174,6 +185,27 @@ git commit -m "Describe the change"
     ↓
 git push
 ```
+
+This is the fastest flow for small learning projects where one person is
+working directly on the main branch.
+
+### Alternative workflow (with feature branches)
+
+Use this when collaborating with others or when changes are larger.
+
+Create and switch to a feature branch:
+
+``` bash
+git checkout -b feature/short-description
+```
+
+Push branch to GitHub (first push):
+
+``` bash
+git push -u origin feature/short-description
+```
+
+Then open a Pull Request and merge after review.
 
 If Git reports a conflict, rejects a command, or you are unsure what to
 do, stop and ask for help instead of trying random commands.
