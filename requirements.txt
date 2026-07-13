@@ -1,4 +1,18 @@
 # Add Python dependencies here, one package per line.
-# Example:
-# requests==2.32.3
+# - Example with explicit version:
+#   requests==2.32.3
+# - Example with version range:
+#   requests>=2.32.3,<3.0.0
+# - Example without version (not recommended):
+#   requests
+
+python-dotenv==1.1.1
 requests==2.32.3
+
+# Linting and formatting tools
+isort
+black
+flake8
+
+# Development and testing tools
+pytest
