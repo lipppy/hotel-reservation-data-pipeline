@@ -131,6 +131,24 @@ you split it up is up to you — there's no single right answer here.
 If you get stuck on an error you don't understand, or progress stalls for more
 than 20-30 minutes, ask for help instead of guessing.
 
+## Git workflow
+
+- Work in a **feature branch**, not directly on `main` — e.g.
+  `git checkout -b intern/reservations` once, at the start of the week.
+- **Commit often.** Once a practice file or task file runs and does what its
+  docstring describes, commit it with a short, clear message (e.g.
+  `git commit -m "Task 2: save Apaleo response to JSON"`). Small commits are
+  easier for your mentor to review, and easier for you to look back on.
+- When you finish a **practice chapter** (a file in `practice/`) or a
+  **task** (a file in `tasks/`, or `api.py`), push your branch
+  (`git push -u origin intern/reservations`) and ask your mentor for a
+  review before moving on to the next one.
+
+This week is meant to be practice, not a test. If you're stuck, or a task
+feels overwhelming, say so and ask for help — that's expected, not a
+failure. The goal is a digestible, useful way to learn this stuff, and
+hopefully a fun one too.
+
 ---
 
 ## Appendix: Python basics reference

@@ -25,6 +25,24 @@ the one-line definitions in [GLOSSARY.md](GLOSSARY.md) — the distinctions
 don't matter much for this project, so that's all the detail you need.
 
 
+## How should I use git while working through this project?
+
+Work in your own feature branch, not `main`, and commit as you finish each
+practice file or task file. Once a practice chapter or task is done and
+working, push your branch and ask your mentor to review it before moving
+on to the next one. See PROJECT.md's "Git workflow" section for the exact
+commands.
+
+
+## Is it okay to ask for help if I get stuck?
+
+Yes — always. Getting stuck, or finding a task overwhelming, is a normal
+part of learning this stuff for the first time, not a sign you're doing
+something wrong. Ask early rather than guessing for a long time — the goal
+of this week is for the practice to be digestible and useful, and hopefully
+fun, not stressful.
+
+
 ## What are these `.md` files?
 
 `.md` files are Markdown files, which are plain text files that use a simple syntax to format text. They are commonly used for documentation, README files, and other text-based content. Markdown allows you to create headings, lists, links, code blocks, and other formatting elements in a way that is easy to read and write. In this project, `.md` files are used for documentation purposes, such as providing explanations and instructions for the project.
