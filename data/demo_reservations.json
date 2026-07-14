@@ -1,0 +1,642 @@
+[
+  {
+    "reservation_id": "RES-100001",
+    "property_id": "MUC",
+    "arrival": "2026-06-29",
+    "departure": "2026-07-05",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 1,
+    "updated_at": "2026-06-28T09:30:00"
+  },
+  {
+    "reservation_id": "RES-100002",
+    "property_id": "VIE",
+    "arrival": "2026-07-02",
+    "departure": "2026-07-06",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 2,
+    "updated_at": "2026-06-30T10:30:00"
+  },
+  {
+    "reservation_id": "RES-100003",
+    "property_id": "BER",
+    "arrival": "2026-07-05",
+    "departure": "2026-07-07",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 0,
+    "updated_at": "2026-07-02T11:30:00"
+  },
+  {
+    "reservation_id": "RES-100004",
+    "property_id": "MUC",
+    "arrival": "2026-07-08",
+    "departure": "2026-07-15",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 1,
+    "updated_at": "2026-07-04T12:30:00"
+  },
+  {
+    "reservation_id": "RES-100005",
+    "property_id": "VIE",
+    "arrival": "2026-07-11",
+    "departure": "2026-07-16",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 2,
+    "updated_at": "2026-07-06T13:30:00"
+  },
+  {
+    "reservation_id": "RES-100006",
+    "property_id": "BER",
+    "arrival": "2026-07-14",
+    "departure": "2026-07-17",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 0,
+    "updated_at": "2026-07-08T14:30:00"
+  },
+  {
+    "reservation_id": "RES-100007",
+    "property_id": "MUC",
+    "arrival": "2026-07-17",
+    "departure": "2026-07-18",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 1,
+    "updated_at": "2026-07-10T15:30:00"
+  },
+  {
+    "reservation_id": "RES-100008",
+    "property_id": "VIE",
+    "arrival": "2026-07-20",
+    "departure": "2026-07-26",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 2,
+    "updated_at": "2026-07-12T16:30:00"
+  },
+  {
+    "reservation_id": "RES-100009",
+    "property_id": "BER",
+    "arrival": "2026-07-23",
+    "departure": "2026-07-27",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 0,
+    "updated_at": "2026-07-14T17:30:00"
+  },
+  {
+    "reservation_id": "RES-100010",
+    "property_id": "MUC",
+    "arrival": "2026-07-26",
+    "departure": "2026-07-28",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 1,
+    "updated_at": "2026-07-16T08:30:00"
+  },
+  {
+    "reservation_id": "RES-100011",
+    "property_id": "VIE",
+    "arrival": "2026-07-29",
+    "departure": "2026-08-05",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 2,
+    "updated_at": "2026-07-18T09:30:00"
+  },
+  {
+    "reservation_id": "RES-100012",
+    "property_id": "BER",
+    "arrival": "2026-06-26",
+    "departure": "2026-07-01",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 0,
+    "updated_at": "2026-06-26T10:30:00"
+  },
+  {
+    "reservation_id": "RES-100013",
+    "property_id": "MUC",
+    "arrival": "2026-06-29",
+    "departure": "2026-07-02",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 1,
+    "updated_at": "2026-06-28T11:30:00"
+  },
+  {
+    "reservation_id": "RES-100014",
+    "property_id": "VIE",
+    "arrival": "2026-07-02",
+    "departure": "2026-07-03",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 2,
+    "updated_at": "2026-06-30T12:30:00"
+  },
+  {
+    "reservation_id": "RES-100015",
+    "property_id": "BER",
+    "arrival": "2026-07-05",
+    "departure": "2026-07-11",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 0,
+    "updated_at": "2026-07-02T13:30:00"
+  },
+  {
+    "reservation_id": "RES-100016",
+    "property_id": "MUC",
+    "arrival": "2026-07-08",
+    "departure": "2026-07-12",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 1,
+    "updated_at": "2026-07-04T14:30:00"
+  },
+  {
+    "reservation_id": "RES-100017",
+    "property_id": "VIE",
+    "arrival": "2026-07-11",
+    "departure": "2026-07-13",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 2,
+    "updated_at": "2026-07-06T15:30:00"
+  },
+  {
+    "reservation_id": "RES-100018",
+    "property_id": "BER",
+    "arrival": "2026-07-14",
+    "departure": "2026-07-21",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 0,
+    "updated_at": "2026-07-08T16:30:00"
+  },
+  {
+    "reservation_id": "RES-100019",
+    "property_id": "MUC",
+    "arrival": "2026-07-17",
+    "departure": "2026-07-22",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 1,
+    "updated_at": "2026-07-10T17:30:00"
+  },
+  {
+    "reservation_id": "RES-100020",
+    "property_id": "VIE",
+    "arrival": "2026-07-20",
+    "departure": "2026-07-23",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 2,
+    "updated_at": "2026-07-12T08:30:00"
+  },
+  {
+    "reservation_id": "RES-100021",
+    "property_id": "BER",
+    "arrival": "2026-07-23",
+    "departure": "2026-07-24",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 0,
+    "updated_at": "2026-07-14T09:30:00"
+  },
+  {
+    "reservation_id": "RES-100022",
+    "property_id": "MUC",
+    "arrival": "2026-07-26",
+    "departure": "2026-08-01",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 1,
+    "updated_at": "2026-07-16T10:30:00"
+  },
+  {
+    "reservation_id": "RES-100023",
+    "property_id": "VIE",
+    "arrival": "2026-07-29",
+    "departure": "2026-08-02",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 2,
+    "updated_at": "2026-07-18T11:30:00"
+  },
+  {
+    "reservation_id": "RES-100024",
+    "property_id": "BER",
+    "arrival": "2026-06-26",
+    "departure": "2026-06-28",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 0,
+    "updated_at": "2026-06-26T12:30:00"
+  },
+  {
+    "reservation_id": "RES-100025",
+    "property_id": "MUC",
+    "arrival": "2026-06-29",
+    "departure": "2026-07-06",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 1,
+    "updated_at": "2026-06-28T13:30:00"
+  },
+  {
+    "reservation_id": "RES-100026",
+    "property_id": "VIE",
+    "arrival": "2026-07-02",
+    "departure": "2026-07-07",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 2,
+    "updated_at": "2026-06-30T14:30:00"
+  },
+  {
+    "reservation_id": "RES-100027",
+    "property_id": "BER",
+    "arrival": "2026-07-05",
+    "departure": "2026-07-08",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 0,
+    "updated_at": "2026-07-02T15:30:00"
+  },
+  {
+    "reservation_id": "RES-100028",
+    "property_id": "MUC",
+    "arrival": "2026-07-08",
+    "departure": "2026-07-09",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 1,
+    "updated_at": "2026-07-04T16:30:00"
+  },
+  {
+    "reservation_id": "RES-100029",
+    "property_id": "VIE",
+    "arrival": "2026-07-11",
+    "departure": "2026-07-17",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 2,
+    "updated_at": "2026-07-06T17:30:00"
+  },
+  {
+    "reservation_id": "RES-100030",
+    "property_id": "BER",
+    "arrival": "2026-07-14",
+    "departure": "2026-07-18",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 0,
+    "updated_at": "2026-07-08T08:30:00"
+  },
+  {
+    "reservation_id": "RES-100031",
+    "property_id": "MUC",
+    "arrival": "2026-07-17",
+    "departure": "2026-07-19",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 1,
+    "updated_at": "2026-07-10T09:30:00"
+  },
+  {
+    "reservation_id": "RES-100032",
+    "property_id": "VIE",
+    "arrival": "2026-07-20",
+    "departure": "2026-07-27",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 2,
+    "updated_at": "2026-07-12T10:30:00"
+  },
+  {
+    "reservation_id": "RES-100033",
+    "property_id": "BER",
+    "arrival": "2026-07-23",
+    "departure": "2026-07-28",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 0,
+    "updated_at": "2026-07-14T11:30:00"
+  },
+  {
+    "reservation_id": "RES-100034",
+    "property_id": "MUC",
+    "arrival": "2026-07-26",
+    "departure": "2026-07-29",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 1,
+    "updated_at": "2026-07-16T12:30:00"
+  },
+  {
+    "reservation_id": "RES-100035",
+    "property_id": "VIE",
+    "arrival": "2026-07-29",
+    "departure": "2026-07-30",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 2,
+    "updated_at": "2026-07-18T13:30:00"
+  },
+  {
+    "reservation_id": "RES-100036",
+    "property_id": "BER",
+    "arrival": "2026-06-26",
+    "departure": "2026-07-02",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 0,
+    "updated_at": "2026-06-26T14:30:00"
+  },
+  {
+    "reservation_id": "RES-100037",
+    "property_id": "MUC",
+    "arrival": "2026-06-29",
+    "departure": "2026-07-03",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 1,
+    "updated_at": "2026-06-28T15:30:00"
+  },
+  {
+    "reservation_id": "RES-100038",
+    "property_id": "VIE",
+    "arrival": "2026-07-02",
+    "departure": "2026-07-04",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 2,
+    "updated_at": "2026-06-30T16:30:00"
+  },
+  {
+    "reservation_id": "RES-100039",
+    "property_id": "BER",
+    "arrival": "2026-07-05",
+    "departure": "2026-07-12",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 0,
+    "updated_at": "2026-07-02T17:30:00"
+  },
+  {
+    "reservation_id": "RES-100040",
+    "property_id": "MUC",
+    "arrival": "2026-07-08",
+    "departure": "2026-07-13",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 1,
+    "updated_at": "2026-07-04T08:30:00"
+  },
+  {
+    "reservation_id": "RES-100041",
+    "property_id": "VIE",
+    "arrival": "2026-07-11",
+    "departure": "2026-07-14",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 2,
+    "updated_at": "2026-07-06T09:30:00"
+  },
+  {
+    "reservation_id": "RES-100042",
+    "property_id": "BER",
+    "arrival": "2026-07-14",
+    "departure": "2026-07-15",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 0,
+    "updated_at": "2026-07-08T10:30:00"
+  },
+  {
+    "reservation_id": "RES-100043",
+    "property_id": "MUC",
+    "arrival": "2026-07-17",
+    "departure": "2026-07-23",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 1,
+    "updated_at": "2026-07-10T11:30:00"
+  },
+  {
+    "reservation_id": "RES-100044",
+    "property_id": "VIE",
+    "arrival": "2026-07-20",
+    "departure": "2026-07-24",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 2,
+    "updated_at": "2026-07-12T12:30:00"
+  },
+  {
+    "reservation_id": "RES-100045",
+    "property_id": "BER",
+    "arrival": "2026-07-23",
+    "departure": "2026-07-25",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 0,
+    "updated_at": "2026-07-14T13:30:00"
+  },
+  {
+    "reservation_id": "RES-100046",
+    "property_id": "MUC",
+    "arrival": "2026-07-26",
+    "departure": "2026-08-02",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 1,
+    "updated_at": "2026-07-16T14:30:00"
+  },
+  {
+    "reservation_id": "RES-100047",
+    "property_id": "VIE",
+    "arrival": "2026-07-29",
+    "departure": "2026-08-03",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 2,
+    "updated_at": "2026-07-18T15:30:00"
+  },
+  {
+    "reservation_id": "RES-100048",
+    "property_id": "BER",
+    "arrival": "2026-06-26",
+    "departure": "2026-06-29",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 0,
+    "updated_at": "2026-06-26T16:30:00"
+  },
+  {
+    "reservation_id": "RES-100049",
+    "property_id": "MUC",
+    "arrival": "2026-06-29",
+    "departure": "2026-06-30",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 1,
+    "updated_at": "2026-06-28T17:30:00"
+  },
+  {
+    "reservation_id": "RES-100050",
+    "property_id": "VIE",
+    "arrival": "2026-07-02",
+    "departure": "2026-07-08",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 2,
+    "updated_at": "2026-06-30T08:30:00"
+  },
+  {
+    "reservation_id": "RES-100051",
+    "property_id": "BER",
+    "arrival": "2026-07-05",
+    "departure": "2026-07-09",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 0,
+    "updated_at": "2026-07-02T09:30:00"
+  },
+  {
+    "reservation_id": "RES-100052",
+    "property_id": "MUC",
+    "arrival": "2026-07-08",
+    "departure": "2026-07-10",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 1,
+    "updated_at": "2026-07-04T10:30:00"
+  },
+  {
+    "reservation_id": "RES-100053",
+    "property_id": "VIE",
+    "arrival": "2026-07-11",
+    "departure": "2026-07-18",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 2,
+    "updated_at": "2026-07-06T11:30:00"
+  },
+  {
+    "reservation_id": "RES-100054",
+    "property_id": "BER",
+    "arrival": "2026-07-14",
+    "departure": "2026-07-19",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 0,
+    "updated_at": "2026-07-08T12:30:00"
+  },
+  {
+    "reservation_id": "RES-100055",
+    "property_id": "MUC",
+    "arrival": "2026-07-17",
+    "departure": "2026-07-20",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 1,
+    "updated_at": "2026-07-10T13:30:00"
+  },
+  {
+    "reservation_id": "RES-100056",
+    "property_id": "VIE",
+    "arrival": "2026-07-20",
+    "departure": "2026-07-21",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 2,
+    "updated_at": "2026-07-12T14:30:00"
+  },
+  {
+    "reservation_id": "RES-100057",
+    "property_id": "BER",
+    "arrival": "2026-07-23",
+    "departure": "2026-07-29",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 0,
+    "updated_at": "2026-07-14T15:30:00"
+  },
+  {
+    "reservation_id": "RES-100058",
+    "property_id": "MUC",
+    "arrival": "2026-07-26",
+    "departure": "2026-07-30",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 1,
+    "updated_at": "2026-07-16T16:30:00"
+  },
+  {
+    "reservation_id": "RES-100059",
+    "property_id": "VIE",
+    "arrival": "2026-07-29",
+    "departure": "2026-07-31",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 2,
+    "updated_at": "2026-07-18T17:30:00"
+  },
+  {
+    "reservation_id": "RES-100060",
+    "property_id": "BER",
+    "arrival": "2026-06-26",
+    "departure": "2026-07-03",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 0,
+    "updated_at": "2026-06-26T08:30:00"
+  },
+  {
+    "reservation_id": "RES-100061",
+    "property_id": "MUC",
+    "arrival": "2026-06-29",
+    "departure": "2026-07-04",
+    "status": "CheckedIn",
+    "adults": 2,
+    "children": 1,
+    "updated_at": "2026-06-28T09:30:00"
+  },
+  {
+    "reservation_id": "RES-100062",
+    "property_id": "VIE",
+    "arrival": "2026-07-02",
+    "departure": "2026-07-05",
+    "status": "CheckedOut",
+    "adults": 3,
+    "children": 2,
+    "updated_at": "2026-06-30T10:30:00"
+  },
+  {
+    "reservation_id": "RES-100063",
+    "property_id": "BER",
+    "arrival": "2026-07-05",
+    "departure": "2026-07-06",
+    "status": "Cancelled",
+    "adults": 4,
+    "children": 0,
+    "updated_at": "2026-07-02T11:30:00"
+  },
+  {
+    "reservation_id": "RES-100064",
+    "property_id": "MUC",
+    "arrival": "2026-07-08",
+    "departure": "2026-07-14",
+    "status": "Confirmed",
+    "adults": 1,
+    "children": 1,
+    "updated_at": "2026-07-04T12:30:00"
+  }
+]

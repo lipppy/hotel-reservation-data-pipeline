@@ -757,7 +757,8 @@
 
     <footer class="hud-footer">
       <span>
-        Live API → <code>GET /api/reservations?hotelCode&amp;from&amp;to</code> · backend:
+        Demo → <code>GET /api/reservations-demo</code> · Live API →
+        <code>GET /api/reservations?hotelCode&amp;from&amp;to</code> · backend:
         <code>api.py</code> · MySQL-backed · code = 3 letters · range ≤ 7 days
       </span>
       <span class="tagline">SO-937 // Class-A Terminal</span>
@@ -768,6 +769,7 @@
     "use strict";
 
     const PAGE_SIZE = 8;
+    const RESERVATIONS_DEMO_API_URL = "/api/reservations-demo";
     const RESERVATIONS_API_URL = "/api/reservations";
     const MAX_RANGE_DAYS = 7;
 
@@ -846,40 +848,6 @@
       return date.toISOString().slice(0, 10);
     }
 
-    function addDays(date, numberOfDays) {
-      const result = new Date(date);
-      result.setDate(result.getDate() + numberOfDays);
-      return result;
-    }
-
-    function generateDemoData() {
-      const today = new Date();
-      const statuses = ["Confirmed", "CheckedIn", "CheckedOut", "Cancelled"];
-      const hotelCodes = ["BER", "MUC", "VIE"];
-      const records = [];
-
-      for (let index = 1; index <= 64; index += 1) {
-        const arrivalOffset = -18 + ((index * 3) % 36);
-        const stayLength = 1 + ((index * 5) % 7);
-        const arrivalDate = addDays(today, arrivalOffset);
-        const departureDate = addDays(arrivalDate, stayLength);
-        const updatedDate = addDays(arrivalDate, -(index % 12));
-
-        records.push({
-          reservation_id: `RES-${String(100000 + index)}`,
-          property_id: hotelCodes[index % hotelCodes.length],
-          arrival: formatDate(arrivalDate),
-          departure: formatDate(departureDate),
-          status: statuses[index % statuses.length],
-          adults: 1 + (index % 4),
-          children: index % 3,
-          updated_at: `${formatDate(updatedDate)}T${String(8 + (index % 10)).padStart(2, "0")}:30:00`
-        });
-      }
-
-      return records;
-    }
-
     function normalizeRecord(record) {
       const normalized = {
         reservation_id: String(record.reservation_id ?? ""),
@@ -906,9 +874,31 @@
       return Math.round((end - start) / millisecondsPerDay);
     }
 
+    async function fetchReservations(url, failureLabel) {
+      const response = await fetch(url, {
+        headers: {
+          Accept: "application/json"
+        },
+        cache: "no-store"
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(
+          (data && data.error) || `${failureLabel} failed. HTTP status: ${response.status}`
+        );
+      }
+
+      return Array.isArray(data) ? data : data.records;
+    }
+
     async function loadRecords(source, filters) {
       if (source === "demo") {
-        return generateDemoData();
+        return fetchReservations(
+          new URL(RESERVATIONS_DEMO_API_URL, window.location.origin),
+          "Demo data request"
+        );
       }
 
       if (source === "db") {
@@ -935,22 +925,7 @@
         url.searchParams.set("from", dateFrom);
         url.searchParams.set("to", dateTo);
 
-        const response = await fetch(url, {
-          headers: {
-            Accept: "application/json"
-          },
-          cache: "no-store"
-        });
-
-        const data = await response.json().catch(() => null);
-
-        if (!response.ok) {
-          throw new Error(
-            (data && data.error) || `Live API request failed. HTTP status: ${response.status}`
-          );
-        }
-
-        return Array.isArray(data) ? data : data.records;
+        return fetchReservations(url, "Live API request");
       }
 
       throw new Error("Unknown data source.");
