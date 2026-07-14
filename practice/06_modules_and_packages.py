@@ -26,5 +26,5 @@ print(json.dumps({"today": str(date.today())}))
 # in requirements.txt and installs them inside a Docker container instead of
 # directly on your computer. Write 1-2 sentences below explaining, in your
 # own words, why that's useful (hint: see "What is a virtual environment?"
-# in GLOSSARY.md).
+# in FAQ.md).
 # TODO: your answer as a comment here
