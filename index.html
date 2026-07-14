@@ -310,7 +310,7 @@
     }
 
     input {
-      width: 118px;
+      width: 152px;
     }
 
     input:focus,
@@ -350,21 +350,24 @@
     /* ---------- main: stats + charts ---------- */
 
     .hud-main {
-      flex: 0 0 200px;
+      flex: 0 0 240px;
       display: flex;
       gap: 8px;
       min-height: 0;
     }
 
     .stat-rail {
-      flex: 0 0 176px;
+      flex: 0 0 192px;
       display: flex;
       flex-direction: column;
       gap: 8px;
+      min-height: 0;
     }
 
     .stat-tile {
       flex: 1;
+      min-height: 0;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: center;
