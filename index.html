@@ -1354,8 +1354,10 @@
       setLoading(true);
       setMessage("");
 
+      const source = elements.sourceSelect.value;
+      elements.activeSourceLabel.textContent = sourceLabels[source];
+
       try {
-        const source = elements.sourceSelect.value;
         const filters = {
           hotelCode: elements.hotelCode.value.trim(),
           dateFrom: elements.dateFrom.value,
@@ -1382,7 +1384,6 @@
             ? today
             : elements.dateFrom.value;
 
-        elements.activeSourceLabel.textContent = sourceLabels[source];
         setMessage(
           `${state.allRecords.length} records loaded from ${sourceLabels[source]}.`
         );
@@ -1390,6 +1391,14 @@
         applyFilters();
       } catch (error) {
         console.error(error);
+
+        // Don't leave a previous (possibly unrelated) load on screen — an empty
+        // or failed request should show as empty, not as stale leftover data.
+        state.allRecords = [];
+        state.filteredRecords = [];
+        state.currentPage = 1;
+        renderAll();
+
         setMessage(error.message || "The data source could not be loaded.", true);
       } finally {
         setLoading(false);
