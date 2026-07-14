@@ -97,7 +97,7 @@
 
     .controls-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      grid-template-columns: repeat(6, minmax(140px, 1fr));
       gap: 14px;
       align-items: end;
     }
@@ -389,11 +389,13 @@
           <label for="sourceSelect">Data source</label>
           <select id="sourceSelect">
             <option value="demo">Built-in demo data</option>
-            <option value="csv">CSV file: export.csv</option>
-            <option value="json">JSON file: export.json</option>
-            <option value="js">JavaScript file: export.js</option>
-            <option value="db">Database API</option>
+            <option value="db">Live API (/api/reservations)</option>
           </select>
+        </div>
+
+        <div class="field">
+          <label for="hotelCode">Hotel code</label>
+          <input id="hotelCode" type="text" maxlength="3" value="BER" placeholder="BER" />
         </div>
 
         <div class="field">
@@ -428,9 +430,10 @@
       <div id="message" class="message" role="status" aria-live="polite"></div>
 
       <div class="technical-note">
-        Browsers should not connect directly to a production database. The “Database API”
-        option calls <code>/api/reservations</code>, which should be implemented by a backend
-        service that reads the database and returns JSON.
+        Browsers should not connect directly to a production database. The “Live API” option
+        calls <code>/api/reservations?hotelCode=...&amp;from=...&amp;to=...</code>, implemented
+        by the Flask backend in <code>api.py</code>, which reads MySQL and returns JSON. The
+        hotel code must be 3 letters, and the date range can span at most 7 days.
       </div>
     </section>
 
@@ -481,15 +484,14 @@
         <table>
           <thead>
             <tr>
-              <th>Primary key</th>
-              <th>Apaleo ID</th>
+              <th>Reservation ID</th>
+              <th>Hotel code</th>
               <th>Arrival</th>
               <th>Departure</th>
-              <th>Current status</th>
+              <th>Status</th>
               <th>Adults</th>
               <th>Children</th>
-              <th>Updated</th>
-              <th>Created</th>
+              <th>Updated at</th>
             </tr>
           </thead>
           <tbody id="reservationTableBody"></tbody>
@@ -512,7 +514,8 @@
     "use strict";
 
     const PAGE_SIZE = 10;
-    const DATABASE_API_URL = "/api/reservations";
+    const RESERVATIONS_API_URL = "/api/reservations";
+    const MAX_RANGE_DAYS = 7;
 
     const state = {
       allRecords: [],
@@ -524,6 +527,7 @@
 
     const elements = {
       sourceSelect: document.getElementById("sourceSelect"),
+      hotelCode: document.getElementById("hotelCode"),
       dateFrom: document.getElementById("dateFrom"),
       dateTo: document.getElementById("dateTo"),
       referenceDate: document.getElementById("referenceDate"),
@@ -546,10 +550,7 @@
 
     const sourceLabels = {
       demo: "Demo data",
-      csv: "export.csv",
-      json: "export.json",
-      js: "export.js",
-      db: "Database API"
+      db: "Live API (/api/reservations)"
     };
 
     function formatDate(date) {
@@ -565,6 +566,7 @@
     function generateDemoData() {
       const today = new Date();
       const statuses = ["Confirmed", "CheckedIn", "CheckedOut", "Cancelled"];
+      const hotelCodes = ["BER", "MUC", "VIE"];
       const records = [];
 
       for (let index = 1; index <= 64; index += 1) {
@@ -572,38 +574,33 @@
         const stayLength = 1 + ((index * 5) % 7);
         const arrivalDate = addDays(today, arrivalOffset);
         const departureDate = addDays(arrivalDate, stayLength);
-        const createdDate = addDays(arrivalDate, -20 - (index % 25));
-        const updatedDate = addDays(createdDate, 1 + (index % 12));
+        const updatedDate = addDays(arrivalDate, -(index % 12));
 
         records.push({
-          id: index,
-          apaleo_id: `APA-${String(100000 + index)}`,
+          reservation_id: `RES-${String(100000 + index)}`,
+          property_id: hotelCodes[index % hotelCodes.length],
           arrival: formatDate(arrivalDate),
           departure: formatDate(departureDate),
-          current_status: statuses[index % statuses.length],
+          status: statuses[index % statuses.length],
           adults: 1 + (index % 4),
           children: index % 3,
-          updated: `${formatDate(updatedDate)}T${String(8 + (index % 10)).padStart(2, "0")}:30:00`,
-          created: `${formatDate(createdDate)}T09:00:00`
+          updated_at: `${formatDate(updatedDate)}T${String(8 + (index % 10)).padStart(2, "0")}:30:00`
         });
       }
 
       return records;
     }
 
-    function normalizeRecord(record, fallbackId) {
+    function normalizeRecord(record) {
       const normalized = {
-        id: Number(record.id ?? record.primary_key ?? record.pk ?? fallbackId),
-        apaleo_id: String(record.apaleo_id ?? record.apaleoId ?? record["Apaleo ID"] ?? ""),
+        reservation_id: String(record.reservation_id ?? ""),
+        property_id: String(record.property_id ?? ""),
         arrival: String(record.arrival ?? "").slice(0, 10),
         departure: String(record.departure ?? "").slice(0, 10),
-        current_status: String(
-          record.current_status ?? record.status ?? record["Current status"] ?? "Unknown"
-        ),
+        status: String(record.status ?? "Unknown"),
         adults: Number(record.adults ?? 0),
         children: Number(record.children ?? 0),
-        updated: String(record.updated ?? ""),
-        created: String(record.created ?? "")
+        updated_at: String(record.updated_at ?? "")
       };
 
       if (!normalized.arrival || !normalized.departure) {
@@ -613,121 +610,57 @@
       return normalized;
     }
 
-    function parseCsvLine(line) {
-      const values = [];
-      let current = "";
-      let insideQuotes = false;
-
-      for (let index = 0; index < line.length; index += 1) {
-        const character = line[index];
-        const nextCharacter = line[index + 1];
-
-        if (character === '"' && insideQuotes && nextCharacter === '"') {
-          current += '"';
-          index += 1;
-        } else if (character === '"') {
-          insideQuotes = !insideQuotes;
-        } else if (character === "," && !insideQuotes) {
-          values.push(current);
-          current = "";
-        } else {
-          current += character;
-        }
-      }
-
-      values.push(current);
-      return values;
+    function daysBetween(dateFrom, dateTo) {
+      const millisecondsPerDay = 24 * 60 * 60 * 1000;
+      const start = new Date(`${dateFrom}T00:00:00`);
+      const end = new Date(`${dateTo}T00:00:00`);
+      return Math.round((end - start) / millisecondsPerDay);
     }
 
-    function parseCsv(csvText) {
-      const lines = csvText
-        .replace(/^\uFEFF/, "")
-        .split(/\r?\n/)
-        .filter((line) => line.trim() !== "");
-
-      if (lines.length < 2) {
-        return [];
-      }
-
-      const headers = parseCsvLine(lines[0]).map((header) => header.trim());
-
-      return lines.slice(1).map((line, rowIndex) => {
-        const values = parseCsvLine(line);
-        const record = {};
-
-        headers.forEach((header, columnIndex) => {
-          record[header] = values[columnIndex] ?? "";
-        });
-
-        return normalizeRecord(record, rowIndex + 1);
-      });
-    }
-
-    async function loadScriptData(scriptUrl) {
-      delete window.EXPORT_DATA;
-
-      await new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = `${scriptUrl}?cacheBust=${Date.now()}`;
-        script.onload = resolve;
-        script.onerror = () => reject(new Error(`Could not load ${scriptUrl}.`));
-        document.head.appendChild(script);
-      });
-
-      if (!Array.isArray(window.EXPORT_DATA)) {
-        throw new Error(
-          'export.js must define a global array, for example: window.EXPORT_DATA = [{...}];'
-        );
-      }
-
-      return window.EXPORT_DATA;
-    }
-
-    async function loadRecords(source) {
+    async function loadRecords(source, filters) {
       if (source === "demo") {
         return generateDemoData();
       }
 
-      if (source === "csv") {
-        const response = await fetch("./export.csv", { cache: "no-store" });
-
-        if (!response.ok) {
-          throw new Error(`Could not load export.csv. HTTP status: ${response.status}`);
-        }
-
-        return parseCsv(await response.text());
-      }
-
-      if (source === "json") {
-        const response = await fetch("./export.json", { cache: "no-store" });
-
-        if (!response.ok) {
-          throw new Error(`Could not load export.json. HTTP status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return Array.isArray(data) ? data : data.records;
-      }
-
-      if (source === "js") {
-        return loadScriptData("./export.js");
-      }
-
       if (source === "db") {
-        const response = await fetch(DATABASE_API_URL, {
+        const { hotelCode, dateFrom, dateTo } = filters;
+
+        if (!/^[A-Za-z]{3}$/.test(hotelCode)) {
+          throw new Error("Hotel code must be exactly 3 letters, e.g. BER.");
+        }
+
+        if (!dateFrom || !dateTo) {
+          throw new Error("Both 'Date from' and 'Date to' are required.");
+        }
+
+        if (dateFrom > dateTo) {
+          throw new Error("The start date cannot be later than the end date.");
+        }
+
+        if (daysBetween(dateFrom, dateTo) > MAX_RANGE_DAYS - 1) {
+          throw new Error(`The date range can span at most ${MAX_RANGE_DAYS} days.`);
+        }
+
+        const url = new URL(RESERVATIONS_API_URL, window.location.origin);
+        url.searchParams.set("hotelCode", hotelCode.toUpperCase());
+        url.searchParams.set("from", dateFrom);
+        url.searchParams.set("to", dateTo);
+
+        const response = await fetch(url, {
           headers: {
             Accept: "application/json"
           },
           cache: "no-store"
         });
 
+        const data = await response.json().catch(() => null);
+
         if (!response.ok) {
           throw new Error(
-            `Database API request failed. HTTP status: ${response.status}`
+            (data && data.error) || `Live API request failed. HTTP status: ${response.status}`
           );
         }
 
-        const data = await response.json();
         return Array.isArray(data) ? data : data.records;
       }
 
@@ -768,7 +701,7 @@
 
     function isStayingOnDate(record, date) {
       return (
-        record.current_status !== "Cancelled" &&
+        record.status !== "Cancelled" &&
         record.arrival <= date &&
         record.departure > date
       );
@@ -792,7 +725,10 @@
       });
 
       state.filteredRecords.sort((left, right) => {
-        return left.arrival.localeCompare(right.arrival) || left.id - right.id;
+        return (
+          left.arrival.localeCompare(right.arrival) ||
+          left.reservation_id.localeCompare(right.reservation_id)
+        );
       });
 
       state.currentPage = 1;
@@ -805,16 +741,14 @@
       const arrivals = dates.map(
         (date) =>
           records.filter(
-            (record) =>
-              record.current_status !== "Cancelled" && record.arrival === date
+            (record) => record.status !== "Cancelled" && record.arrival === date
           ).length
       );
 
       const departures = dates.map(
         (date) =>
           records.filter(
-            (record) =>
-              record.current_status !== "Cancelled" && record.departure === date
+            (record) => record.status !== "Cancelled" && record.departure === date
           ).length
       );
 
@@ -847,7 +781,7 @@
     function renderSummary() {
       const date = elements.referenceDate.value;
       const validRecords = state.allRecords.filter(
-        (record) => record.current_status !== "Cancelled"
+        (record) => record.status !== "Cancelled"
       );
 
       const arrivals = validRecords.filter((record) => record.arrival === date).length;
@@ -984,7 +918,7 @@
       if (pageRecords.length === 0) {
         elements.tableBody.innerHTML = `
           <tr>
-            <td colspan="9" class="empty-state">No records match the selected filters.</td>
+            <td colspan="8" class="empty-state">No records match the selected filters.</td>
           </tr>
         `;
       } else {
@@ -992,15 +926,14 @@
           .map(
             (record) => `
               <tr>
-                <td>${escapeHtml(record.id)}</td>
-                <td>${escapeHtml(record.apaleo_id)}</td>
+                <td>${escapeHtml(record.reservation_id)}</td>
+                <td>${escapeHtml(record.property_id)}</td>
                 <td>${escapeHtml(record.arrival)}</td>
                 <td>${escapeHtml(record.departure)}</td>
-                <td><span class="status">${escapeHtml(record.current_status)}</span></td>
+                <td><span class="status">${escapeHtml(record.status)}</span></td>
                 <td>${escapeHtml(record.adults)}</td>
                 <td>${escapeHtml(record.children)}</td>
-                <td>${escapeHtml(record.updated)}</td>
-                <td>${escapeHtml(record.created)}</td>
+                <td>${escapeHtml(record.updated_at)}</td>
               </tr>
             `
           )
@@ -1044,23 +977,31 @@
 
       try {
         const source = elements.sourceSelect.value;
-        const rawRecords = await loadRecords(source);
+        const filters = {
+          hotelCode: elements.hotelCode.value.trim(),
+          dateFrom: elements.dateFrom.value,
+          dateTo: elements.dateTo.value
+        };
+
+        const rawRecords = await loadRecords(source, filters);
 
         if (!Array.isArray(rawRecords)) {
           throw new Error("The selected data source did not return an array.");
         }
 
-        state.allRecords = rawRecords.map((record, index) =>
-          normalizeRecord(record, index + 1)
-        );
+        state.allRecords = rawRecords.map((record) => normalizeRecord(record));
 
-        const range = getDateRange(state.allRecords);
-        elements.dateFrom.value = range.minimum;
-        elements.dateTo.value = range.maximum;
+        if (source === "demo") {
+          const range = getDateRange(state.allRecords);
+          elements.dateFrom.value = range.minimum;
+          elements.dateTo.value = range.maximum;
+        }
 
         const today = formatDate(new Date());
         elements.referenceDate.value =
-          today >= range.minimum && today <= range.maximum ? today : range.minimum;
+          today >= elements.dateFrom.value && today <= elements.dateTo.value
+            ? today
+            : elements.dateFrom.value;
 
         elements.activeSourceLabel.textContent = sourceLabels[source];
         setMessage(
@@ -1115,15 +1056,14 @@
 
     function exportFilteredCsv() {
       const headers = [
-        "id",
-        "apaleo_id",
+        "reservation_id",
+        "property_id",
         "arrival",
         "departure",
-        "current_status",
+        "status",
         "adults",
         "children",
-        "updated",
-        "created"
+        "updated_at"
       ];
 
       const rows = state.filteredRecords.map((record) =>
