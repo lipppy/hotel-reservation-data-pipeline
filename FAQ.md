@@ -5,6 +5,31 @@ project. For short term definitions (e.g. what a `dictionary` or `REST API`
 is), see [GLOSSARY.md](GLOSSARY.md) instead.
 
 
+## What is my role in this project?
+
+Build the `/api/reservations` endpoint end to end, following the
+task-by-task plan in [PROJECT.md](PROJECT.md): call the Apaleo API, save and
+reload the data as JSON and CSV, load it into MySQL, then query it back out
+and return it as JSON.
+
+
+## What is not my role in this project?
+
+Deciding how the pieces fit together — that part's already decided for you
+(see PROJECT.md's "Context" section). You also don't need to write the
+Apaleo API client (it's provided) or touch `index.html` (the frontend is
+already built). Your job is the backend logic in between.
+
+Curious what "backend developer" and similar job titles actually mean? See
+the one-line definitions in [GLOSSARY.md](GLOSSARY.md) — the distinctions
+don't matter much for this project, so that's all the detail you need.
+
+
+## What are these `.md` files?
+
+`.md` files are Markdown files, which are plain text files that use a simple syntax to format text. They are commonly used for documentation, README files, and other text-based content. Markdown allows you to create headings, lists, links, code blocks, and other formatting elements in a way that is easy to read and write. In this project, `.md` files are used for documentation purposes, such as providing explanations and instructions for the project.
+
+
 ## What is `.gitignore`?
 
 `.gitignore` is a file used by Git to determine which files and directories to ignore in a project. This is useful for excluding temporary files, build artifacts, and sensitive information from being committed to the repository.
