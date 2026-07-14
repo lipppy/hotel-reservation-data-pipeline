@@ -823,6 +823,21 @@
       db: "Live API (/api/reservations)"
     };
 
+    // The real endpoint only ever returns one property's reservations, so the
+    // frontend scopes to the same hotel code everywhere (table, charts,
+    // summary) — never showing a mix of hotels the live API wouldn't return.
+    function getScopedRecords() {
+      const hotelCode = elements.hotelCode.value.trim().toUpperCase();
+
+      if (!hotelCode) {
+        return state.allRecords;
+      }
+
+      return state.allRecords.filter(
+        (record) => record.property_id.toUpperCase() === hotelCode
+      );
+    }
+
     function currentTheme() {
       return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
     }
@@ -1013,7 +1028,14 @@
         return;
       }
 
-      state.filteredRecords = state.allRecords.filter((record) => {
+      // Clear a stale validation error left over from an in-between state (e.g.
+      // dateFrom and dateTo each trigger their own "change" event, so there's a
+      // moment where only one of the two has been updated).
+      if (elements.message.classList.contains("error")) {
+        setMessage("");
+      }
+
+      state.filteredRecords = getScopedRecords().filter((record) => {
         const overlapsRange =
           (!dateFrom || record.departure >= dateFrom) &&
           (!dateTo || record.arrival <= dateTo);
@@ -1075,7 +1097,7 @@
 
     function renderSummary() {
       const date = elements.referenceDate.value;
-      const validRecords = state.allRecords.filter(occupiesRoom);
+      const validRecords = getScopedRecords().filter(occupiesRoom);
 
       const arrivals = validRecords.filter((record) => record.arrival === date).length;
       const departures = validRecords.filter(
@@ -1098,7 +1120,7 @@
         return;
       }
 
-      const series = calculateDailySeries(state.allRecords, dateFrom, dateTo);
+      const series = calculateDailySeries(getScopedRecords(), dateFrom, dateTo);
 
       const ink = themeVar("--text-muted");
       const grid = themeVar("--grid-line");
@@ -1306,7 +1328,7 @@
         state.allRecords = rawRecords.map((record) => normalizeRecord(record));
 
         if (source === "demo") {
-          const range = defaultDateWindow(state.allRecords);
+          const range = defaultDateWindow(getScopedRecords());
           elements.dateFrom.value = range.minimum;
           elements.dateTo.value = range.maximum;
         }
@@ -1332,7 +1354,7 @@
     }
 
     function resetFilters() {
-      const range = defaultDateWindow(state.allRecords);
+      const range = defaultDateWindow(getScopedRecords());
       elements.dateFrom.value = range.minimum;
       elements.dateTo.value = range.maximum;
 
@@ -1402,6 +1424,7 @@
     elements.exportCsvButton.addEventListener("click", exportFilteredCsv);
     elements.exportJsonButton.addEventListener("click", exportFilteredJson);
 
+    elements.hotelCode.addEventListener("input", applyFilters);
     elements.dateFrom.addEventListener("change", applyFilters);
     elements.dateTo.addEventListener("change", applyFilters);
     elements.referenceDate.addEventListener("change", renderSummary);
