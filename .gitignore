@@ -163,6 +163,10 @@ venv.bak/
 data/raw/
 data/processed/
 
+# Generated practice output (from practice/07_file_handling.py and practice/08_json.py)
+data/practice_output.txt
+data/practice_reservations_filtered.json
+
 # Spyder project settings
 .spyderproject
 .spyproject
