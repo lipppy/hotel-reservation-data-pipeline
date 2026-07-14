@@ -773,6 +773,15 @@
     const RESERVATIONS_API_URL = "/api/reservations";
     const MAX_RANGE_DAYS = 7;
 
+    // Raw Apaleo reservation statuses, used as-is (no relabeling/mapping).
+    // "Canceled" and "NoShow" never occupy a room, so they're excluded from
+    // arrivals/departures/occupancy and flagged in the table.
+    const NON_OCCUPYING_STATUSES = new Set(["Canceled", "NoShow"]);
+
+    function occupiesRoom(record) {
+      return !NON_OCCUPYING_STATUSES.has(record.status);
+    }
+
     const CHART_FONT = "'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace";
     Chart.defaults.font.family = CHART_FONT;
     Chart.defaults.font.size = 10;
@@ -984,7 +993,7 @@
 
     function isStayingOnDate(record, date) {
       return (
-        record.status !== "Cancelled" &&
+        occupiesRoom(record) &&
         record.arrival <= date &&
         record.departure > date
       );
@@ -1028,16 +1037,14 @@
 
       const arrivals = dates.map(
         (date) =>
-          records.filter(
-            (record) => record.status !== "Cancelled" && record.arrival === date
-          ).length
+          records.filter((record) => occupiesRoom(record) && record.arrival === date)
+            .length
       );
 
       const departures = dates.map(
         (date) =>
-          records.filter(
-            (record) => record.status !== "Cancelled" && record.departure === date
-          ).length
+          records.filter((record) => occupiesRoom(record) && record.departure === date)
+            .length
       );
 
       const occupancyReservations = dates.map(
@@ -1068,9 +1075,7 @@
 
     function renderSummary() {
       const date = elements.referenceDate.value;
-      const validRecords = state.allRecords.filter(
-        (record) => record.status !== "Cancelled"
-      );
+      const validRecords = state.allRecords.filter(occupiesRoom);
 
       const arrivals = validRecords.filter((record) => record.arrival === date).length;
       const departures = validRecords.filter(
@@ -1231,8 +1236,7 @@
       } else {
         elements.tableBody.innerHTML = pageRecords
           .map((record) => {
-            const statusClass =
-              record.status === "Cancelled" ? "status status-critical" : "status";
+            const statusClass = occupiesRoom(record) ? "status" : "status status-critical";
 
             return `
               <tr>

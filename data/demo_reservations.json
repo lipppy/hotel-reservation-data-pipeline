@@ -4,7 +4,7 @@
     "property_id": "MUC",
     "arrival": "2026-06-29",
     "departure": "2026-07-05",
-    "status": "CheckedIn",
+    "status": "InHouse",
     "adults": 2,
     "children": 1,
     "updated_at": "2026-06-28T09:30:00"
@@ -24,7 +24,7 @@
     "property_id": "BER",
     "arrival": "2026-07-05",
     "departure": "2026-07-07",
-    "status": "Cancelled",
+    "status": "Canceled",
     "adults": 4,
     "children": 0,
     "updated_at": "2026-07-02T11:30:00"
@@ -34,7 +34,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-08",
     "departure": "2026-07-15",
-    "status": "Confirmed",
+    "status": "NoShow",
     "adults": 1,
     "children": 1,
     "updated_at": "2026-07-04T12:30:00"
@@ -44,7 +44,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-11",
     "departure": "2026-07-16",
-    "status": "CheckedIn",
+    "status": "Confirmed",
     "adults": 2,
     "children": 2,
     "updated_at": "2026-07-06T13:30:00"
@@ -54,7 +54,7 @@
     "property_id": "BER",
     "arrival": "2026-07-14",
     "departure": "2026-07-17",
-    "status": "CheckedOut",
+    "status": "InHouse",
     "adults": 3,
     "children": 0,
     "updated_at": "2026-07-08T14:30:00"
@@ -64,7 +64,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-17",
     "departure": "2026-07-18",
-    "status": "Cancelled",
+    "status": "CheckedOut",
     "adults": 4,
     "children": 1,
     "updated_at": "2026-07-10T15:30:00"
@@ -74,7 +74,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-20",
     "departure": "2026-07-26",
-    "status": "Confirmed",
+    "status": "Canceled",
     "adults": 1,
     "children": 2,
     "updated_at": "2026-07-12T16:30:00"
@@ -84,7 +84,7 @@
     "property_id": "BER",
     "arrival": "2026-07-23",
     "departure": "2026-07-27",
-    "status": "CheckedIn",
+    "status": "NoShow",
     "adults": 2,
     "children": 0,
     "updated_at": "2026-07-14T17:30:00"
@@ -94,7 +94,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-26",
     "departure": "2026-07-28",
-    "status": "CheckedOut",
+    "status": "Confirmed",
     "adults": 3,
     "children": 1,
     "updated_at": "2026-07-16T08:30:00"
@@ -104,7 +104,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-29",
     "departure": "2026-08-05",
-    "status": "Cancelled",
+    "status": "InHouse",
     "adults": 4,
     "children": 2,
     "updated_at": "2026-07-18T09:30:00"
@@ -114,7 +114,7 @@
     "property_id": "BER",
     "arrival": "2026-06-26",
     "departure": "2026-07-01",
-    "status": "Confirmed",
+    "status": "CheckedOut",
     "adults": 1,
     "children": 0,
     "updated_at": "2026-06-26T10:30:00"
@@ -124,7 +124,7 @@
     "property_id": "MUC",
     "arrival": "2026-06-29",
     "departure": "2026-07-02",
-    "status": "CheckedIn",
+    "status": "Canceled",
     "adults": 2,
     "children": 1,
     "updated_at": "2026-06-28T11:30:00"
@@ -134,7 +134,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-02",
     "departure": "2026-07-03",
-    "status": "CheckedOut",
+    "status": "NoShow",
     "adults": 3,
     "children": 2,
     "updated_at": "2026-06-30T12:30:00"
@@ -144,7 +144,7 @@
     "property_id": "BER",
     "arrival": "2026-07-05",
     "departure": "2026-07-11",
-    "status": "Cancelled",
+    "status": "Confirmed",
     "adults": 4,
     "children": 0,
     "updated_at": "2026-07-02T13:30:00"
@@ -154,7 +154,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-08",
     "departure": "2026-07-12",
-    "status": "Confirmed",
+    "status": "InHouse",
     "adults": 1,
     "children": 1,
     "updated_at": "2026-07-04T14:30:00"
@@ -164,7 +164,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-11",
     "departure": "2026-07-13",
-    "status": "CheckedIn",
+    "status": "CheckedOut",
     "adults": 2,
     "children": 2,
     "updated_at": "2026-07-06T15:30:00"
@@ -174,7 +174,7 @@
     "property_id": "BER",
     "arrival": "2026-07-14",
     "departure": "2026-07-21",
-    "status": "CheckedOut",
+    "status": "Canceled",
     "adults": 3,
     "children": 0,
     "updated_at": "2026-07-08T16:30:00"
@@ -184,7 +184,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-17",
     "departure": "2026-07-22",
-    "status": "Cancelled",
+    "status": "NoShow",
     "adults": 4,
     "children": 1,
     "updated_at": "2026-07-10T17:30:00"
@@ -204,7 +204,7 @@
     "property_id": "BER",
     "arrival": "2026-07-23",
     "departure": "2026-07-24",
-    "status": "CheckedIn",
+    "status": "InHouse",
     "adults": 2,
     "children": 0,
     "updated_at": "2026-07-14T09:30:00"
@@ -224,7 +224,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-29",
     "departure": "2026-08-02",
-    "status": "Cancelled",
+    "status": "Canceled",
     "adults": 4,
     "children": 2,
     "updated_at": "2026-07-18T11:30:00"
@@ -234,7 +234,7 @@
     "property_id": "BER",
     "arrival": "2026-06-26",
     "departure": "2026-06-28",
-    "status": "Confirmed",
+    "status": "NoShow",
     "adults": 1,
     "children": 0,
     "updated_at": "2026-06-26T12:30:00"
@@ -244,7 +244,7 @@
     "property_id": "MUC",
     "arrival": "2026-06-29",
     "departure": "2026-07-06",
-    "status": "CheckedIn",
+    "status": "Confirmed",
     "adults": 2,
     "children": 1,
     "updated_at": "2026-06-28T13:30:00"
@@ -254,7 +254,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-02",
     "departure": "2026-07-07",
-    "status": "CheckedOut",
+    "status": "InHouse",
     "adults": 3,
     "children": 2,
     "updated_at": "2026-06-30T14:30:00"
@@ -264,7 +264,7 @@
     "property_id": "BER",
     "arrival": "2026-07-05",
     "departure": "2026-07-08",
-    "status": "Cancelled",
+    "status": "CheckedOut",
     "adults": 4,
     "children": 0,
     "updated_at": "2026-07-02T15:30:00"
@@ -274,7 +274,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-08",
     "departure": "2026-07-09",
-    "status": "Confirmed",
+    "status": "Canceled",
     "adults": 1,
     "children": 1,
     "updated_at": "2026-07-04T16:30:00"
@@ -284,7 +284,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-11",
     "departure": "2026-07-17",
-    "status": "CheckedIn",
+    "status": "NoShow",
     "adults": 2,
     "children": 2,
     "updated_at": "2026-07-06T17:30:00"
@@ -294,7 +294,7 @@
     "property_id": "BER",
     "arrival": "2026-07-14",
     "departure": "2026-07-18",
-    "status": "CheckedOut",
+    "status": "Confirmed",
     "adults": 3,
     "children": 0,
     "updated_at": "2026-07-08T08:30:00"
@@ -304,7 +304,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-17",
     "departure": "2026-07-19",
-    "status": "Cancelled",
+    "status": "InHouse",
     "adults": 4,
     "children": 1,
     "updated_at": "2026-07-10T09:30:00"
@@ -314,7 +314,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-20",
     "departure": "2026-07-27",
-    "status": "Confirmed",
+    "status": "CheckedOut",
     "adults": 1,
     "children": 2,
     "updated_at": "2026-07-12T10:30:00"
@@ -324,7 +324,7 @@
     "property_id": "BER",
     "arrival": "2026-07-23",
     "departure": "2026-07-28",
-    "status": "CheckedIn",
+    "status": "Canceled",
     "adults": 2,
     "children": 0,
     "updated_at": "2026-07-14T11:30:00"
@@ -334,7 +334,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-26",
     "departure": "2026-07-29",
-    "status": "CheckedOut",
+    "status": "NoShow",
     "adults": 3,
     "children": 1,
     "updated_at": "2026-07-16T12:30:00"
@@ -344,7 +344,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-29",
     "departure": "2026-07-30",
-    "status": "Cancelled",
+    "status": "Confirmed",
     "adults": 4,
     "children": 2,
     "updated_at": "2026-07-18T13:30:00"
@@ -354,7 +354,7 @@
     "property_id": "BER",
     "arrival": "2026-06-26",
     "departure": "2026-07-02",
-    "status": "Confirmed",
+    "status": "InHouse",
     "adults": 1,
     "children": 0,
     "updated_at": "2026-06-26T14:30:00"
@@ -364,7 +364,7 @@
     "property_id": "MUC",
     "arrival": "2026-06-29",
     "departure": "2026-07-03",
-    "status": "CheckedIn",
+    "status": "CheckedOut",
     "adults": 2,
     "children": 1,
     "updated_at": "2026-06-28T15:30:00"
@@ -374,7 +374,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-02",
     "departure": "2026-07-04",
-    "status": "CheckedOut",
+    "status": "Canceled",
     "adults": 3,
     "children": 2,
     "updated_at": "2026-06-30T16:30:00"
@@ -384,7 +384,7 @@
     "property_id": "BER",
     "arrival": "2026-07-05",
     "departure": "2026-07-12",
-    "status": "Cancelled",
+    "status": "NoShow",
     "adults": 4,
     "children": 0,
     "updated_at": "2026-07-02T17:30:00"
@@ -404,7 +404,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-11",
     "departure": "2026-07-14",
-    "status": "CheckedIn",
+    "status": "InHouse",
     "adults": 2,
     "children": 2,
     "updated_at": "2026-07-06T09:30:00"
@@ -424,7 +424,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-17",
     "departure": "2026-07-23",
-    "status": "Cancelled",
+    "status": "Canceled",
     "adults": 4,
     "children": 1,
     "updated_at": "2026-07-10T11:30:00"
@@ -434,7 +434,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-20",
     "departure": "2026-07-24",
-    "status": "Confirmed",
+    "status": "NoShow",
     "adults": 1,
     "children": 2,
     "updated_at": "2026-07-12T12:30:00"
@@ -444,7 +444,7 @@
     "property_id": "BER",
     "arrival": "2026-07-23",
     "departure": "2026-07-25",
-    "status": "CheckedIn",
+    "status": "Confirmed",
     "adults": 2,
     "children": 0,
     "updated_at": "2026-07-14T13:30:00"
@@ -454,7 +454,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-26",
     "departure": "2026-08-02",
-    "status": "CheckedOut",
+    "status": "InHouse",
     "adults": 3,
     "children": 1,
     "updated_at": "2026-07-16T14:30:00"
@@ -464,7 +464,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-29",
     "departure": "2026-08-03",
-    "status": "Cancelled",
+    "status": "CheckedOut",
     "adults": 4,
     "children": 2,
     "updated_at": "2026-07-18T15:30:00"
@@ -474,7 +474,7 @@
     "property_id": "BER",
     "arrival": "2026-06-26",
     "departure": "2026-06-29",
-    "status": "Confirmed",
+    "status": "Canceled",
     "adults": 1,
     "children": 0,
     "updated_at": "2026-06-26T16:30:00"
@@ -484,7 +484,7 @@
     "property_id": "MUC",
     "arrival": "2026-06-29",
     "departure": "2026-06-30",
-    "status": "CheckedIn",
+    "status": "NoShow",
     "adults": 2,
     "children": 1,
     "updated_at": "2026-06-28T17:30:00"
@@ -494,7 +494,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-02",
     "departure": "2026-07-08",
-    "status": "CheckedOut",
+    "status": "Confirmed",
     "adults": 3,
     "children": 2,
     "updated_at": "2026-06-30T08:30:00"
@@ -504,7 +504,7 @@
     "property_id": "BER",
     "arrival": "2026-07-05",
     "departure": "2026-07-09",
-    "status": "Cancelled",
+    "status": "InHouse",
     "adults": 4,
     "children": 0,
     "updated_at": "2026-07-02T09:30:00"
@@ -514,7 +514,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-08",
     "departure": "2026-07-10",
-    "status": "Confirmed",
+    "status": "CheckedOut",
     "adults": 1,
     "children": 1,
     "updated_at": "2026-07-04T10:30:00"
@@ -524,7 +524,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-11",
     "departure": "2026-07-18",
-    "status": "CheckedIn",
+    "status": "Canceled",
     "adults": 2,
     "children": 2,
     "updated_at": "2026-07-06T11:30:00"
@@ -534,7 +534,7 @@
     "property_id": "BER",
     "arrival": "2026-07-14",
     "departure": "2026-07-19",
-    "status": "CheckedOut",
+    "status": "NoShow",
     "adults": 3,
     "children": 0,
     "updated_at": "2026-07-08T12:30:00"
@@ -544,7 +544,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-17",
     "departure": "2026-07-20",
-    "status": "Cancelled",
+    "status": "Confirmed",
     "adults": 4,
     "children": 1,
     "updated_at": "2026-07-10T13:30:00"
@@ -554,7 +554,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-20",
     "departure": "2026-07-21",
-    "status": "Confirmed",
+    "status": "InHouse",
     "adults": 1,
     "children": 2,
     "updated_at": "2026-07-12T14:30:00"
@@ -564,7 +564,7 @@
     "property_id": "BER",
     "arrival": "2026-07-23",
     "departure": "2026-07-29",
-    "status": "CheckedIn",
+    "status": "CheckedOut",
     "adults": 2,
     "children": 0,
     "updated_at": "2026-07-14T15:30:00"
@@ -574,7 +574,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-26",
     "departure": "2026-07-30",
-    "status": "CheckedOut",
+    "status": "Canceled",
     "adults": 3,
     "children": 1,
     "updated_at": "2026-07-16T16:30:00"
@@ -584,7 +584,7 @@
     "property_id": "VIE",
     "arrival": "2026-07-29",
     "departure": "2026-07-31",
-    "status": "Cancelled",
+    "status": "NoShow",
     "adults": 4,
     "children": 2,
     "updated_at": "2026-07-18T17:30:00"
@@ -604,7 +604,7 @@
     "property_id": "MUC",
     "arrival": "2026-06-29",
     "departure": "2026-07-04",
-    "status": "CheckedIn",
+    "status": "InHouse",
     "adults": 2,
     "children": 1,
     "updated_at": "2026-06-28T09:30:00"
@@ -624,7 +624,7 @@
     "property_id": "BER",
     "arrival": "2026-07-05",
     "departure": "2026-07-06",
-    "status": "Cancelled",
+    "status": "Canceled",
     "adults": 4,
     "children": 0,
     "updated_at": "2026-07-02T11:30:00"
@@ -634,7 +634,7 @@
     "property_id": "MUC",
     "arrival": "2026-07-08",
     "departure": "2026-07-14",
-    "status": "Confirmed",
+    "status": "NoShow",
     "adults": 1,
     "children": 1,
     "updated_at": "2026-07-04T12:30:00"
