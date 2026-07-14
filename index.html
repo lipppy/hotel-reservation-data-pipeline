@@ -869,8 +869,8 @@
 
     function daysBetween(dateFrom, dateTo) {
       const millisecondsPerDay = 24 * 60 * 60 * 1000;
-      const start = new Date(`${dateFrom}T00:00:00`);
-      const end = new Date(`${dateTo}T00:00:00`);
+      const start = new Date(`${dateFrom}T00:00:00Z`);
+      const end = new Date(`${dateTo}T00:00:00Z`);
       return Math.round((end - start) / millisecondsPerDay);
     }
 
@@ -950,14 +950,33 @@
       return { minimum, maximum };
     }
 
+    function addDays(date, numberOfDays) {
+      const result = new Date(date);
+      result.setUTCDate(result.getUTCDate() + numberOfDays);
+      return result;
+    }
+
+    // Same max-range rule as the Live API, applied to whichever source is active —
+    // so the default view never shows a range the app itself would reject.
+    function defaultDateWindow(records) {
+      const fullRange = getDateRange(records);
+      const today = formatDate(new Date());
+      const start =
+        today >= fullRange.minimum && today <= fullRange.maximum ? today : fullRange.minimum;
+      const cappedEnd = formatDate(addDays(new Date(`${start}T00:00:00Z`), MAX_RANGE_DAYS - 1));
+      const end = cappedEnd < fullRange.maximum ? cappedEnd : fullRange.maximum;
+
+      return { minimum: start, maximum: end };
+    }
+
     function buildDateSequence(dateFrom, dateTo) {
       const dates = [];
-      const cursor = new Date(`${dateFrom}T00:00:00`);
-      const endDate = new Date(`${dateTo}T00:00:00`);
+      const cursor = new Date(`${dateFrom}T00:00:00Z`);
+      const endDate = new Date(`${dateTo}T00:00:00Z`);
 
       while (cursor <= endDate) {
         dates.push(formatDate(cursor));
-        cursor.setDate(cursor.getDate() + 1);
+        cursor.setUTCDate(cursor.getUTCDate() + 1);
       }
 
       return dates;
@@ -977,6 +996,11 @@
 
       if (dateFrom && dateTo && dateFrom > dateTo) {
         setMessage("The start date cannot be later than the end date.", true);
+        return;
+      }
+
+      if (dateFrom && dateTo && daysBetween(dateFrom, dateTo) > MAX_RANGE_DAYS - 1) {
+        setMessage(`The date range can span at most ${MAX_RANGE_DAYS} days.`, true);
         return;
       }
 
@@ -1278,7 +1302,7 @@
         state.allRecords = rawRecords.map((record) => normalizeRecord(record));
 
         if (source === "demo") {
-          const range = getDateRange(state.allRecords);
+          const range = defaultDateWindow(state.allRecords);
           elements.dateFrom.value = range.minimum;
           elements.dateTo.value = range.maximum;
         }
@@ -1304,7 +1328,7 @@
     }
 
     function resetFilters() {
-      const range = getDateRange(state.allRecords);
+      const range = defaultDateWindow(state.allRecords);
       elements.dateFrom.value = range.minimum;
       elements.dateTo.value = range.maximum;
 
