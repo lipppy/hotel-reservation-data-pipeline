@@ -359,6 +359,28 @@ hard-code them.
 
 Practice: [`practice/13_database_work.py`](practice/13_database_work.py)
 
+### 14. Testing
+
+Read: the pytest "Get Started" guide - just enough to see what a test
+function looks like and what `assert` does.
+
+https://docs.pytest.org/en/stable/getting-started.html
+
+```python
+def total_guests(adults, children):
+    return adults + children
+
+
+def test_total_guests_adds_adults_and_children():
+    assert total_guests(2, 1) == 3
+```
+
+pytest finds functions named `test_...` and runs them - a test passes as
+long as nothing inside it raises an error (a failed `assert` counts as an
+error). Run the whole test suite with `make test`.
+
+Practice: [`practice/14_testing.py`](practice/14_testing.py)
+
 ### Not Required for This Project
 
 Skip these unless the mentor specifically asks for them: tuples, sets, match

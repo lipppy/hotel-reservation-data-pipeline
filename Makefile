@@ -1,7 +1,7 @@
 COMPOSE = docker compose
 SERVICE = python
 
-.PHONY: help up up-clean down shell exec bash run py
+.PHONY: help up up-clean down shell exec bash run py test
 
 help:
 	@echo "Targets:"
@@ -12,6 +12,7 @@ help:
 	@echo "  make exec              - Open Python shell in running container"
 	@echo "  make bash              - Open bash in running container"
 	@echo "  make run FILE=app.py   - Run a Python file"
+	@echo "  make test              - Run the test suite (pytest)"
 	@echo "  make init-env          - Create .env file from .env.example"
 
 up:
@@ -36,6 +37,9 @@ bash:
 run:
 	@if [ -z "$(FILE)" ]; then echo "Usage: make run FILE=path/to/script.py"; exit 1; fi
 	$(COMPOSE) run --rm --build $(SERVICE) python $(FILE)
+
+test:
+	$(COMPOSE) run --rm --build $(SERVICE) pytest
 
 init-env:
 	@echo "Creating .env file from .env.example..."

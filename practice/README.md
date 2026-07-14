@@ -25,5 +25,12 @@ make run FILE=practice/12_http_requests.py
 make run FILE=practice/13_database_work.py
 ```
 
+[`14_testing.py`](14_testing.py) is the exception - it's not a script to run
+top to bottom, it's a set of pytest test functions, so it's run differently:
+
+```bash
+make test
+```
+
 Once you're comfortable with a topic, move on to the matching step in
 [`tasks/`](../tasks/), where you apply it to the real reservation pipeline.
