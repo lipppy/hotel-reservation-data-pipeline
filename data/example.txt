@@ -1,0 +1,2 @@
+This is a practice file for the File Handling exercise.
+Feel free to read it, but don't delete it.

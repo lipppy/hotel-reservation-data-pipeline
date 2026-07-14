@@ -152,6 +152,8 @@ Comments.
 print("Hotel reservation project")
 ```
 
+Practice: [`practice/01_getting_started.py`](practice/01_getting_started.py)
+
 ### 2. Variables and Basic Data Types
 
 Read: Python Variables, Python Data Types, Python Numbers, Python Casting,
@@ -166,6 +168,8 @@ is_cancelled = False
 total_guests = adults + children
 print(total_guests)
 ```
+
+Practice: [`practice/02_variables_and_data_types.py`](practice/02_variables_and_data_types.py)
 
 ### 3. Lists and Dictionaries
 
@@ -188,6 +192,8 @@ for item in reservations:
 
 Skip tuples and sets unless needed later.
 
+Practice: [`practice/03_lists_and_dictionaries.py`](practice/03_lists_and_dictionaries.py)
+
 ### 4. Conditions and Loops
 
 Read: Python If...Else, Comparison Operators, Logical Operators, Python For
@@ -203,6 +209,8 @@ for reservation in reservations:
 
 Read `while` loops only if required.
 
+Practice: [`practice/04_conditions_and_loops.py`](practice/04_conditions_and_loops.py)
+
 ### 5. Functions
 
 Read: Python Functions, Python Arguments, Python Scope.
@@ -217,6 +225,8 @@ functions for now — except the route decorators Flask itself requires
 (`@app.get(...)`), which you can copy without needing to fully understand
 decorators yet.
 
+Practice: [`practice/05_functions.py`](practice/05_functions.py)
+
 ### 6. Modules and Packages
 
 Read: Python Modules, Python PIP, Python VirtualEnv.
@@ -226,6 +236,8 @@ import csv
 import json
 from datetime import date
 ```
+
+Practice: [`practice/06_modules_and_packages.py`](practice/06_modules_and_packages.py)
 
 ### 7. File Handling
 
@@ -238,6 +250,8 @@ with open("data/example.txt", "r", encoding="utf-8") as file:
 
 Deleting files is not required.
 
+Practice: [`practice/07_file_handling.py`](practice/07_file_handling.py)
+
 ### 8. JSON
 
 Read: Python JSON.
@@ -248,6 +262,8 @@ import json
 with open("data/reservations.json", "r", encoding="utf-8") as file:
     reservations = json.load(file)
 ```
+
+Practice: [`practice/08_json.py`](practice/08_json.py)
 
 ### 9. Dates
 
@@ -262,6 +278,8 @@ departure = date.fromisoformat("2026-07-16")
 print(departure >= arrival)
 ```
 
+Practice: [`practice/09_dates.py`](practice/09_dates.py)
+
 ### 10. Error Handling
 
 Read: Python Try...Except, Python None.
@@ -273,6 +291,8 @@ except ValueError:
     print("Invalid number")
 ```
 
+Practice: [`practice/10_error_handling.py`](practice/10_error_handling.py)
+
 ### 11. String Formatting
 
 Read: Python String Formatting.
@@ -280,6 +300,8 @@ Read: Python String Formatting.
 ```python
 print(f"{apaleo_id}: {total_guests} guests")
 ```
+
+Practice: [`practice/11_string_formatting.py`](practice/11_string_formatting.py)
 
 ### 12. HTTP Requests
 
@@ -299,6 +321,8 @@ data = response.json()
 Use the real API only with the credentials and instructions provided by the
 mentor.
 
+Practice: [`practice/12_http_requests.py`](practice/12_http_requests.py)
+
 ### 13. Database Work
 
 The W3Schools Python database tutorial mostly covers MySQL, which matches
@@ -314,6 +338,8 @@ matters most:
 Use the `mysql-connector-python` package, and read the connection details
 (host, user, password, database) from `.env` via `python-dotenv` — never
 hard-code them.
+
+Practice: [`practice/13_database_work.py`](practice/13_database_work.py)
 
 ### Not Required for This Project
 

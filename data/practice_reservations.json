@@ -1,0 +1,29 @@
+[
+  {
+    "apaleo_id": "RES-1001",
+    "property_id": "BER",
+    "arrival": "2026-07-01",
+    "departure": "2026-07-04",
+    "adults": 2,
+    "children": 0,
+    "is_cancelled": false
+  },
+  {
+    "apaleo_id": "RES-1002",
+    "property_id": "BER",
+    "arrival": "2026-07-02",
+    "departure": "2026-07-05",
+    "adults": 1,
+    "children": 1,
+    "is_cancelled": false
+  },
+  {
+    "apaleo_id": "RES-1003",
+    "property_id": "MUC",
+    "arrival": "2026-07-03",
+    "departure": "2026-07-06",
+    "adults": 2,
+    "children": 2,
+    "is_cancelled": true
+  }
+]
