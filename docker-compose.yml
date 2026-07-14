@@ -80,7 +80,11 @@ services:
     working_dir: /workspace
     volumes:
       - ./:/workspace
-    command: ["python", "-m", "flask", "--app", "api", "run", "--host", "0.0.0.0", "--port", "5000"]
+    # --debug enables Werkzeug's auto-reloader, so editing api.py is picked up
+    # on save without restarting the container. It also enables the interactive
+    # in-browser debugger on unhandled errors - local development only, never
+    # use --debug on anything reachable outside your own machine.
+    command: ["python", "-m", "flask", "--app", "api", "run", "--host", "0.0.0.0", "--port", "5000", "--debug"]
     ports:
       - "5000:5000" # lets you call the API directly, e.g. http://localhost:5000/api/reservations
     depends_on:
