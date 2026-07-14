@@ -136,3 +136,8 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+
+## What is this `localhost` thing especially combined with `:8080` in the URL?
+
+`localhost` refers to your own computer, also known as the loopback address. When you see `localhost` in a URL, it means that the web browser is trying to connect to a web server running on your own machine. The `:8080` part specifies the port number that the server is listening on. In this project, the Nginx web server is configured to serve the dashboard on port 8080, so you would open `http://localhost:8080` in your browser to view it. The API endpoint is served on port 5000, so you would open `http://localhost:5000/api/reservations` to access it directly. The database is served on port 3306, so you would connect to it with a MySQL client using `localhost:3306`.
