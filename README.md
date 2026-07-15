@@ -4,22 +4,22 @@
 
 This repository contains a small hotel reservation data pipeline developed as part of a one-week Software Development internship project.
 
-The project demonstrates how data can move between different systems and formats using Python. It starts with basic file operations and gradually introduces CSV and JSON processing, PostgreSQL, Docker, REST API integration, data transformation, validation, and export.
+The project demonstrates how data can move between different systems and formats using Python. It starts with basic file operations and gradually introduces CSV and JSON processing, MySQL, Docker, REST API integration, data transformation, validation, and export.
 
-The final application processes hotel reservation data through the following pipeline:
+The final application processes hotel reservation data through the following pipeline (see [PROJECT.md](PROJECT.md) for the full breakdown):
 
 ```
-CSV / JSON / REST API
+   Apaleo REST API
           ↓
-        Python
+   JSON file (raw response)
           ↓
- Validation & Transformation
+   CSV file (fields we need)
           ↓
-      PostgreSQL
+        MySQL
           ↓
-     CSV / JSON Export
+  Query by hotel + date range
           ↓
-      Dashboard
+   JSON response → Dashboard
 ```
 
 The main goal of the project is to provide practical experience with a simplified version of a real-world software integration workflow.

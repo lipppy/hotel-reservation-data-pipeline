@@ -38,15 +38,15 @@ def connect():
 connection = connect()
 cursor = connection.cursor()
 
-cursor.execute(
-    """
+cursor.execute("""
     CREATE TABLE IF NOT EXISTS practice_notes (
         id INT AUTO_INCREMENT PRIMARY KEY,
         note VARCHAR(255) NOT NULL
     )
-    """
+    """)
+cursor.execute(
+    "INSERT INTO practice_notes (note) VALUES (%s)", ("hello from practice",)
 )
-cursor.execute("INSERT INTO practice_notes (note) VALUES (%s)", ("hello from practice",))
 connection.commit()
 
 cursor.execute("SELECT id, note FROM practice_notes")

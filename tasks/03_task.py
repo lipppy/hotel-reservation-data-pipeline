@@ -33,7 +33,15 @@ import os
 
 JSON_PATH = "data/raw/reservations.json"
 CSV_PATH = "data/processed/reservations.csv"
-CSV_FIELDS = ["reservation_id", "property_id", "arrival", "departure", "adults", "children", "status"]
+CSV_FIELDS = [
+    "reservation_id",
+    "property_id",
+    "arrival",
+    "departure",
+    "adults",
+    "children",
+    "status",
+]
 
 
 def get_reservation_list(data: dict | list) -> list[dict]:
