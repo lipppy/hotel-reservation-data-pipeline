@@ -138,11 +138,11 @@ def _normalize_reservation(raw: dict) -> dict:
 
     return {
         "reservation_id": raw.get("id"),
-        "property_id": raw.get("propertyId"),
+        "property_id": raw.get("property", {}).get("id"),
         "arrival": raw.get("arrival"),
         "departure": raw.get("departure"),
         "adults": raw.get("adults"),
-        "children": sum(raw.get("childrenAges", [])),
+        "children": len(raw.get("childrenAges", [])),
         "status": raw.get("status"),
     }
 
