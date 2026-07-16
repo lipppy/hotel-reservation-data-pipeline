@@ -7,10 +7,20 @@ from __future__ import annotations
 
 import datetime
 import json
+import logging
 
 from flask import Flask, jsonify, request
 
 from integrations.db import get_reservations as get_db_reservations
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+    force=True,
+)
+
+log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
 
 app = Flask(__name__)
 
@@ -20,8 +30,15 @@ MAX_RANGE_DAYS = 7
 
 @app.get("/api/playground")
 def get_playground():
-    """A simple test endpoint to confirm the backend is running."""
-    print("Someone called /api/playground!")
+    """
+    A simple test endpoint to confirm the backend is running.
+    
+    You can see me in your browser at http://localhost:5000/api/playground,
+    and you can see me in the logs with `docker compose logs -f api`.
+    I don't do anything useful.
+    """
+    print("Someone called /api/playground!sadsd", flush=True)
+    log.info("Someone called /api/playground!")
     return jsonify({"message": "Hello from the backend!"})
 
 
