@@ -5,19 +5,24 @@ Run with: flask --app api run --host 0.0.0.0 --port 5000
 
 from __future__ import annotations
 
+import datetime
 import json
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+
+from integrations.db import get_reservations as get_db_reservations
 
 app = Flask(__name__)
 
-DEMO_RESERVATIONS_PATH = "data/demo_reservations.json"
+DEMO_HOTEL_CODES = ["BER", "VIE", "MUC"]
+MAX_RANGE_DAYS = 7
 
 
-@app.get("/api/reservations-demo")
-def get_reservations_demo():
-    with open(DEMO_RESERVATIONS_PATH, "r", encoding="utf-8") as file:
-        return jsonify(json.load(file))
+@app.get("/api/playground")
+def get_playground():
+    """A simple test endpoint to confirm the backend is running."""
+    print("Someone called /api/playground!")
+    return jsonify({"message": "Hello from the backend!"})
 
 
 @app.get("/api/reservations")
@@ -167,6 +172,39 @@ def get_reservations():
     #     end to end.
 
     return jsonify({})
+
+
+@app.get("/api/reservations-demo")
+def get_reservations_demo():
+    """Get demo reservations (BER, VIE, MUC) from MySQL, seeded by sql/init.sql.
+
+    Mirrors the query contract /api/reservations will eventually have:
+    hotelCode + from + to, with the same <= MAX_RANGE_DAYS-day range limit.
+    """
+    property_id = request.args.get("hotelCode")
+    date_from = request.args.get("from")
+    date_to = request.args.get("to")
+
+    if property_id not in DEMO_HOTEL_CODES:
+        return jsonify({"error": f"Demo data for {property_id} not available."}), 400
+
+    if not date_from or not date_to:
+        return jsonify({"error": "Both 'from' and 'to' are required."}), 400
+
+    try:
+        parsed_from = datetime.date.fromisoformat(date_from)
+        parsed_to = datetime.date.fromisoformat(date_to)
+    except ValueError:
+        return jsonify({"error": "'from' and 'to' must be dates in YYYY-MM-DD format."}), 400
+
+    if parsed_from > parsed_to:
+        return jsonify({"error": "The start date cannot be later than the end date."}), 400
+
+    if (parsed_to - parsed_from).days > MAX_RANGE_DAYS - 1:
+        return jsonify({"error": f"The date range can span at most {MAX_RANGE_DAYS} days."}), 400
+
+    records = get_db_reservations(property_id, date_from, date_to)
+    return jsonify(records)
 
 
 if __name__ == "__main__":

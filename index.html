@@ -680,14 +680,14 @@
       <div class="field">
         <label for="sourceSelect">Source</label>
         <select id="sourceSelect">
-          <option value="demo">Built-in demo data</option>
+          <option value="demo">Demo API (/api/reservations-demo)</option>
           <option value="db">Live API (/api/reservations)</option>
         </select>
       </div>
 
       <div class="field">
         <label for="hotelCode">Hotel code</label>
-        <input id="hotelCode" type="text" maxlength="3" value="BER" placeholder="BER" style="width: 64px;" />
+        <select id="hotelCode" style="width: 84px;"></select>
       </div>
 
       <div class="field">
@@ -812,6 +812,22 @@
     const RESERVATIONS_API_URL = "/api/reservations";
     const MAX_RANGE_DAYS = 7;
 
+    // Which hotel codes are selectable depends on the active source: the demo
+    // dataset only ever contains these three, while the live API only ever
+    // serves the real properties.
+    const HOTEL_CODES_BY_SOURCE = {
+      demo: ["BER", "VIE", "MUC"],
+      db: ["FST", "FCG", "FCW", "FFK", "FBL", "FCA", "FCR", "FKP", "FMO", "FSG", "FSA", "FEW", "FCZ", "FSV"]
+    };
+
+    // Demo and Live API share the exact same request contract (hotelCode +
+    // from + to, range <= MAX_RANGE_DAYS) - only the endpoint and the label
+    // shown on failure differ.
+    const SOURCE_REQUEST_CONFIG = {
+      demo: { url: RESERVATIONS_DEMO_API_URL, failureLabel: "Demo data request" },
+      db: { url: RESERVATIONS_API_URL, failureLabel: "Live API request" }
+    };
+
     // Raw Apaleo reservation statuses, used as-is (no relabeling/mapping).
     // "Canceled" and "NoShow" never occupy a room, so they're excluded from
     // arrivals/departures/occupancy and flagged in the table.
@@ -908,6 +924,24 @@
 
     applyThemeToggleLabel();
 
+    function populateHotelCodeOptions(source) {
+      const codes = HOTEL_CODES_BY_SOURCE[source];
+      const previous = elements.hotelCode.value;
+
+      elements.hotelCode.innerHTML = codes
+        .map((code) => `<option value="${code}">${code}</option>`)
+        .join("");
+
+      elements.hotelCode.value = codes.includes(previous) ? previous : codes[0];
+    }
+
+    populateHotelCodeOptions(elements.sourceSelect.value);
+
+    elements.sourceSelect.addEventListener("change", () => {
+      populateHotelCodeOptions(elements.sourceSelect.value);
+      applyFilters();
+    });
+
     function formatDate(date) {
       return date.toISOString().slice(0, 10);
     }
@@ -958,41 +992,37 @@
     }
 
     async function loadRecords(source, filters) {
-      if (source === "demo") {
-        return fetchReservations(
-          new URL(RESERVATIONS_DEMO_API_URL, window.location.origin),
-          "Demo data request"
-        );
+      const requestConfig = SOURCE_REQUEST_CONFIG[source];
+      const allowedCodes = HOTEL_CODES_BY_SOURCE[source];
+
+      if (!requestConfig || !allowedCodes) {
+        throw new Error("Unknown data source.");
       }
 
-      if (source === "db") {
-        const { hotelCode, dateFrom, dateTo } = filters;
+      const { hotelCode, dateFrom, dateTo } = filters;
 
-        if (!/^[A-Za-z]{3}$/.test(hotelCode)) {
-          throw new Error("Hotel code must be exactly 3 letters, e.g. BER.");
-        }
-
-        if (!dateFrom || !dateTo) {
-          throw new Error("Both 'Date from' and 'Date to' are required.");
-        }
-
-        if (dateFrom > dateTo) {
-          throw new Error("The start date cannot be later than the end date.");
-        }
-
-        if (daysBetween(dateFrom, dateTo) > MAX_RANGE_DAYS - 1) {
-          throw new Error(`The date range can span at most ${MAX_RANGE_DAYS} days.`);
-        }
-
-        const url = new URL(RESERVATIONS_API_URL, window.location.origin);
-        url.searchParams.set("hotelCode", hotelCode.toUpperCase());
-        url.searchParams.set("from", dateFrom);
-        url.searchParams.set("to", dateTo);
-
-        return fetchReservations(url, "Live API request");
+      if (!allowedCodes.includes(hotelCode.toUpperCase())) {
+        throw new Error(`Hotel code must be one of: ${allowedCodes.join(", ")}.`);
       }
 
-      throw new Error("Unknown data source.");
+      if (!dateFrom || !dateTo) {
+        throw new Error("Both 'Date from' and 'Date to' are required.");
+      }
+
+      if (dateFrom > dateTo) {
+        throw new Error("The start date cannot be later than the end date.");
+      }
+
+      if (daysBetween(dateFrom, dateTo) > MAX_RANGE_DAYS - 1) {
+        throw new Error(`The date range can span at most ${MAX_RANGE_DAYS} days.`);
+      }
+
+      const url = new URL(requestConfig.url, window.location.origin);
+      url.searchParams.set("hotelCode", hotelCode.toUpperCase());
+      url.searchParams.set("from", dateFrom);
+      url.searchParams.set("to", dateTo);
+
+      return fetchReservations(url, requestConfig.failureLabel);
     }
 
     function getDateRange(records) {
@@ -1054,6 +1084,21 @@
       );
     }
 
+    // Summary date is only ever a client-side pick of one day within the
+    // fetched dateFrom..dateTo window (never sent to either endpoint), so
+    // "wiring" it means keeping it inside that window instead of silently
+    // pointing outside it and showing zeros.
+    function syncReferenceDateBounds(dateFrom, dateTo) {
+      elements.referenceDate.min = dateFrom;
+      elements.referenceDate.max = dateTo;
+
+      if (elements.referenceDate.value < dateFrom) {
+        elements.referenceDate.value = dateFrom;
+      } else if (elements.referenceDate.value > dateTo) {
+        elements.referenceDate.value = dateTo;
+      }
+    }
+
     function applyFilters() {
       const dateFrom = elements.dateFrom.value;
       const dateTo = elements.dateTo.value;
@@ -1073,6 +1118,10 @@
       // moment where only one of the two has been updated).
       if (elements.message.classList.contains("error")) {
         setMessage("");
+      }
+
+      if (dateFrom && dateTo) {
+        syncReferenceDateBounds(dateFrom, dateTo);
       }
 
       state.filteredRecords = getScopedRecords().filter((record) => {
@@ -1372,12 +1421,6 @@
 
         state.allRecords = rawRecords.map((record) => normalizeRecord(record));
 
-        if (source === "demo") {
-          const range = defaultDateWindow(getScopedRecords());
-          elements.dateFrom.value = range.minimum;
-          elements.dateTo.value = range.maximum;
-        }
-
         const today = formatDate(new Date());
         elements.referenceDate.value =
           today >= elements.dateFrom.value && today <= elements.dateTo.value
@@ -1476,7 +1519,7 @@
     elements.exportCsvButton.addEventListener("click", exportFilteredCsv);
     elements.exportJsonButton.addEventListener("click", exportFilteredJson);
 
-    elements.hotelCode.addEventListener("input", applyFilters);
+    elements.hotelCode.addEventListener("change", applyFilters);
     elements.dateFrom.addEventListener("change", applyFilters);
     elements.dateTo.addEventListener("change", applyFilters);
     elements.referenceDate.addEventListener("change", renderSummary);
@@ -1499,6 +1542,16 @@
         renderTable();
       }
     });
+
+    // Both sources now require dateFrom/dateTo up front (the server does the
+    // date filtering), so seed a sensible default window before the very
+    // first load instead of waiting on data that hasn't been fetched yet.
+    const bootstrapToday = formatDate(new Date());
+    elements.dateFrom.value = bootstrapToday;
+    elements.dateTo.value = formatDate(
+      addDays(new Date(`${bootstrapToday}T00:00:00Z`), MAX_RANGE_DAYS - 1)
+    );
+    elements.referenceDate.value = bootstrapToday;
 
     loadSelectedSource();
   </script>
