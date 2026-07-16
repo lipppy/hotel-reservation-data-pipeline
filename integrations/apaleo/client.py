@@ -131,13 +131,32 @@ def _reservation_list(payload: dict | list) -> list[dict]:
     return payload.get("reservations", [])
 
 
+def _normalize_reservation(raw: dict) -> dict:
+    """Map Apaleo's raw field names onto the same names used by
+    integrations.db.get_reservations (and the "reservations" table): id ->
+    reservation_id, propertyId -> property_id, the rest unchanged."""
+
+    return {
+        "reservation_id": raw.get("id"),
+        "property_id": raw.get("propertyId"),
+        "arrival": raw.get("arrival"),
+        "departure": raw.get("departure"),
+        "adults": raw.get("adults"),
+        "children": sum(raw.get("childrenAges", [])),
+        "status": raw.get("status"),
+    }
+
+
 def get_reservations(
     property_id: str,
     date_from: str | None = None,
     date_to: str | None = None,
 ) -> list[dict]:
     """Call the Apaleo reservations endpoint for one hotel, filtered first by
-    property, then (optionally) by date range.
+    property, then (optionally) by date range, and return rows already
+    aligned to our schema (reservation_id, property_id, arrival, departure,
+    adults, children, status) - the same shape integrations.db.get_reservations
+    returns, ready for the CSV/DB-upsert step without further remapping.
 
     date_from/date_to are plain "YYYY-MM-DD" dates (same shape as
     integrations.db.get_reservations), expanded here into a full-day UTC
@@ -159,4 +178,4 @@ def get_reservations(
     if response.status_code == 204 or not response.content:
         return []
 
-    return _reservation_list(response.json())
+    return [_normalize_reservation(raw) for raw in _reservation_list(response.json())]
