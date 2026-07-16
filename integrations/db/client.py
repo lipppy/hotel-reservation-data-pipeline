@@ -40,6 +40,51 @@ def _rows_to_dicts(cursor) -> list[dict]:
     ]
 
 
+UPSERT_FIELDS = [
+    "reservation_id",
+    "property_id",
+    "arrival",
+    "departure",
+    "adults",
+    "children",
+    "status",
+]
+
+
+def upsert_reservations(records: list[dict]) -> int:
+    """Insert new reservations, or update existing ones (matched by
+    reservation_id), in the "reservations" table.
+
+    Accepts the shape integrations.apaleo.get_reservations returns (extra
+    keys, e.g. updated_at from integrations.db.get_reservations itself, are
+    ignored - only UPSERT_FIELDS are written). Returns the number of rows
+    upserted.
+    """
+    if not records:
+        return 0
+
+    assignments = ", ".join(
+        f"{column} = VALUES({column})" for column in UPSERT_FIELDS if column != "reservation_id"
+    )
+    query = (
+        f"INSERT INTO reservations ({', '.join(UPSERT_FIELDS)}) "
+        f"VALUES ({', '.join(['%s'] * len(UPSERT_FIELDS))}) "
+        f"ON DUPLICATE KEY UPDATE {assignments}"
+    )
+
+    connection = connect()
+    cursor = connection.cursor()
+
+    try:
+        for record in records:
+            cursor.execute(query, [record.get(column) for column in UPSERT_FIELDS])
+        connection.commit()
+        return len(records)
+    finally:
+        cursor.close()
+        connection.close()
+
+
 def get_reservations(
     property_id: str,
     date_from: str | None = None,
