@@ -121,3 +121,42 @@ class ApaleoClient:
         """Convenience wrapper for GET requests."""
 
         return self.request("GET", path, **kwargs)
+
+
+def _reservation_list(payload: dict | list) -> list[dict]:
+    """Apaleo may wrap the list under a "reservations" key, or return a plain list."""
+
+    if isinstance(payload, list):
+        return payload
+    return payload.get("reservations", [])
+
+
+def get_reservations(
+    property_id: str,
+    date_from: str | None = None,
+    date_to: str | None = None,
+) -> list[dict]:
+    """Call the Apaleo reservations endpoint for one hotel, filtered first by
+    property, then (optionally) by date range.
+
+    date_from/date_to are plain "YYYY-MM-DD" dates (same shape as
+    integrations.db.get_reservations), expanded here into a full-day UTC
+    window and passed with dateFilter="Stay" - i.e. reservations staying at
+    some point between date_from 00:00 and date_to 23:59.
+    """
+    client = ApaleoClient(scope="reservations.read")
+
+    params: dict[str, Any] = {"propertyIds": [property_id]}
+
+    if date_from and date_to:
+        params["dateFilter"] = "Stay"
+        params["from"] = f"{date_from}T00:00:00Z"
+        params["to"] = f"{date_to}T23:59:59Z"
+
+    response = client.get("/booking/v1/reservations", params=params)
+    print(response, flush=True)
+
+    if response.status_code == 204 or not response.content:
+        return []
+
+    return _reservation_list(response.json())
