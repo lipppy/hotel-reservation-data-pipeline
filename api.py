@@ -79,12 +79,16 @@ def get_reservations():
     #    request.args.get("hotelCode"), request.args.get("from"),
     #    request.args.get("to").
 
+
+
     # 2. TRY IT: add a temporary print(hotel_code, date_from, date_to), then
     #    open
-    #    http://localhost:5000/api/reservations?hotelCode=BER&from=2026-07-01&to=2026-07-03
+    #    http://localhost:5000/api/reservations?hotelCode=BER&from=2026-07-01&to=2026-07-07
     #    (saving the file reloads the server automatically). Check
     #    `docker compose logs -f api` and confirm the three values printed
     #    are what you'd expect. Remove the print once it works.
+
+
 
     # 3. Check that hotelCode was actually provided and is exactly 3
     #    characters long. If not, return early with
@@ -92,16 +96,24 @@ def get_reservations():
     #    function. (get_reservations_demo below does the same shape of check
     #    against a fixed list of demo codes, instead of "any 3 letters".)
 
+
+
     # 4. Check that from and to were both provided. If either is missing,
     #    return the same kind of 400 error.
+
+
 
     # 5. TRY IT: reload the URL without hotelCode
     #    (http://localhost:5000/api/reservations) and confirm you get your
     #    own error message back as JSON, instead of a crash page.
 
+
+
     # 6. Work out how many days lie between from and to, and check it's
     #    MAX_RANGE_DAYS or fewer (see the footer note in index.html: "range
     #    <= 7 days"). Return a 400 error if the range is too big.
+
+
 
     # --- Part B: fetch, save, upsert, re-query ------------------------------
 
@@ -112,9 +124,13 @@ def get_reservations():
     #    departure, adults, children, status). Store the result, e.g. as
     #    `reservations`.
 
+
+
     # 8. TRY IT: temporarily print(reservations) or its length, reload the
     #    URL, and confirm real data came back from Apaleo for that
     #    hotel/date range. Remove the print once it works.
+
+
 
     # 9. Call dump_to_json(reservations, hotel_code, date_from, date_to) and
     #    dump_to_csv(reservations, hotel_code, date_from, date_to). Both
@@ -122,24 +138,36 @@ def get_reservations():
     #    the same fetch is now saved as both a data/raw/*.json file and a
     #    data/processed/*.csv file, no manual file handling required.
 
+
+
     # 10. TRY IT: open the two files these just wrote (their names encode
     #     the hotel code and date range you requested) and confirm the
     #     content matches what Apaleo sent back.
 
+
+
     # 11. Call upsert_reservations(reservations) to insert new rows, or
     #     update existing ones (matched by reservation_id), in MySQL.
+
+
 
     # 12. TRY IT: open http://localhost:8081 (Adminer), log in with the
     #     credentials from your .env file, and check the "reservations"
     #     table now has rows in it.
 
+
+
     # 13. Call get_db_reservations(hotel_code, date_from, date_to) to read
     #     back exactly the hotel/date range that was asked for. Store it,
     #     e.g. as `records`.
 
+
+
     # --- Part C: respond -----------------------------------------------------
 
     # 14. Return jsonify(records).
+
+
 
     # 15. TRY IT: reload
     #     http://localhost:5000/api/reservations?hotelCode=BER&from=2026-07-01&to=2026-07-03
@@ -148,6 +176,8 @@ def get_reservations():
     #     http://localhost:8080, switch "Source" to "Live API", and watch
     #     your own data show up in the dashboard - that's the whole pipeline,
     #     end to end.
+
+
 
     return jsonify({})
 
