@@ -11,7 +11,10 @@ import logging
 
 from flask import Flask, jsonify, request
 
+from integrations.apaleo import get_reservations as get_api_reservations
 from integrations.db import get_reservations as get_db_reservations
+from integrations.db import upsert_reservations
+from helpers.export import dump_to_json, dump_to_csv
 
 logging.basicConfig(
     level=logging.INFO,
@@ -32,7 +35,7 @@ MAX_RANGE_DAYS = 7
 def get_playground():
     """
     A simple test endpoint to confirm the backend is running.
-    
+
     You can see me in your browser at http://localhost:5000/api/playground,
     and you can see me in the logs with `docker compose logs -f api`.
     I don't do anything useful.
@@ -46,141 +49,99 @@ def get_playground():
 def get_reservations():
     """Get reservations from Apaleo API via MySQL database."""
     # Everything for this endpoint goes inside this function - follow the
-    # checkpoints below in order, one at a time. Don't skip ahead: each one
-    # builds on the last, and there are "TRY IT" checkpoints along the way so
-    # you can see it working before you move on.
+    # checkpoints below in order. There are "TRY IT" checkpoints along the
+    # way so you can see it working before you move on.
     #
-    # This isn't just "query the database" - it's the FULL pipeline from
-    # PROJECT.md, steps 1-7, all happening live on every request:
-    #   call Apaleo -> save JSON -> build CSV -> read CSV -> upsert MySQL ->
-    #   query MySQL -> return JSON
+    # This is still the FULL pipeline from PROJECT.md, steps 1-7, happening
+    # live on every request:
+    #   call Apaleo -> save JSON -> save CSV -> upsert MySQL -> query MySQL
+    #   -> return JSON
     # Yes, that means the request you're about to build calls the real
     # Apaleo API and touches disk and the database every single time someone
     # loads the dashboard. That is deliberately wasteful for a real system -
     # see PROJECT.md's "flow you are building" section for why it's done
-    # this way here anyway (so you practice every layer by hand).
+    # this way here anyway.
     #
-    # You'll need these imports at the top of the file: `request` from flask,
-    # `os`, `csv`, `mysql.connector`, `load_dotenv` from dotenv, and
-    # `ApaleoClient` from integrations.apaleo.
+    # What changed: you're no longer building each layer by hand. Every layer
+    # (call Apaleo, save JSON, save CSV, upsert MySQL, query MySQL) is now a
+    # single pre-built helper, already imported at the top of this file:
+    #   get_api_reservations(property_id, date_from, date_to)  -> list[dict]
+    #   dump_to_json(records, property_id, date_from, date_to) -> path written
+    #   dump_to_csv(records, property_id, date_from, date_to)  -> path written
+    #   upsert_reservations(records)                           -> rows upserted
+    #   get_db_reservations(property_id, date_from, date_to)   -> list[dict]
+    # Your job here is to CALL these five, in the right order, with the
+    # right arguments - not to reimplement what they already do.
 
     # --- Part A: read and validate the input --------------------------------
 
-    # 1. Read the hotelCode query param off the request:
-    #    request.args.get("hotelCode")
-
-    # 2. Read from and to the same way: request.args.get("from") and
+    # 1. Read hotelCode, from and to off the request:
+    #    request.args.get("hotelCode"), request.args.get("from"),
     #    request.args.get("to").
 
-    # 3. TRY IT: add a temporary print(hotelCode, ...) with all three values,
-    #    then open
+    # 2. TRY IT: add a temporary print(hotel_code, date_from, date_to), then
+    #    open
     #    http://localhost:5000/api/reservations?hotelCode=BER&from=2026-07-01&to=2026-07-03
-    #    in your browser (saving the file reloads the server automatically).
-    #    Check `docker compose logs -f api` and confirm the three values
-    #    printed are what you'd expect. Remove the print once it works.
+    #    (saving the file reloads the server automatically). Check
+    #    `docker compose logs -f api` and confirm the three values printed
+    #    are what you'd expect. Remove the print once it works.
 
-    # 4. Check that hotelCode was actually provided and is exactly 3
+    # 3. Check that hotelCode was actually provided and is exactly 3
     #    characters long. If not, return early with
     #    jsonify({"error": "..."}), 400 - don't continue to the rest of the
-    #    function.
+    #    function. (get_reservations_demo below does the same shape of check
+    #    against a fixed list of demo codes, instead of "any 3 letters".)
 
-    # 5. Check that from and to were both provided. If either is missing,
+    # 4. Check that from and to were both provided. If either is missing,
     #    return the same kind of 400 error.
 
-    # 6. TRY IT: reload the URL without hotelCode
+    # 5. TRY IT: reload the URL without hotelCode
     #    (http://localhost:5000/api/reservations) and confirm you get your
     #    own error message back as JSON, instead of a crash page.
 
-    # 7. Work out how many days lie between from and to, and check it's 7 or
-    #    fewer (see the footer note in index.html: "range ≤ 7 days"). Return
-    #    a 400 error if the range is too big.
+    # 6. Work out how many days lie between from and to, and check it's
+    #    MAX_RANGE_DAYS or fewer (see the footer note in index.html: "range
+    #    <= 7 days"). Return a 400 error if the range is too big.
 
-    # --- Part B: call the Apaleo API (same as tasks/01_task.py) -------------
+    # --- Part B: fetch, save, upsert, re-query ------------------------------
 
-    # 8. Create an ApaleoClient(scope="reservations.read").
+    # 7. Call get_api_reservations(hotel_code, date_from, date_to). It
+    #    already talks to the real Apaleo API and filters by property and by
+    #    stay date range - the rows it hands back are already shaped like
+    #    the "reservations" table (reservation_id, property_id, arrival,
+    #    departure, adults, children, status). Store the result, e.g. as
+    #    `reservations`.
 
-    # 9. Call client.get("/booking/v1/reservations", params=...) with
-    #    propertyIds=[hotelCode], dateFilter="Stay", from=from_date,
-    #    to=to_date.
+    # 8. TRY IT: temporarily print(reservations) or its length, reload the
+    #    URL, and confirm real data came back from Apaleo for that
+    #    hotel/date range. Remove the print once it works.
 
-    # 10. Turn the response into a Python object with response.json() and
-    #     store it, e.g. as apaleo_data.
+    # 9. Call dump_to_json(reservations, hotel_code, date_from, date_to) and
+    #    dump_to_csv(reservations, hotel_code, date_from, date_to). Both
+    #    create their own folder if needed and return the path they wrote -
+    #    the same fetch is now saved as both a data/raw/*.json file and a
+    #    data/processed/*.csv file, no manual file handling required.
 
-    # 11. TRY IT: temporarily print(apaleo_data) or its length, reload the
-    #     URL, and confirm real reservation data came back from Apaleo for
-    #     that hotel/date range. Remove the print once it works.
+    # 10. TRY IT: open the two files these just wrote (their names encode
+    #     the hotel code and date range you requested) and confirm the
+    #     content matches what Apaleo sent back.
 
-    # --- Part C: save the raw response to a file (same as tasks/02_task.py) -
+    # 11. Call upsert_reservations(reservations) to insert new rows, or
+    #     update existing ones (matched by reservation_id), in MySQL.
 
-    # 12. Make sure the "data/raw" folder exists:
-    #     os.makedirs("data/raw", exist_ok=True)
-
-    # 13. Write apaleo_data to data/raw/reservations.json with
-    #     json.dump(..., indent=2, ensure_ascii=False).
-
-    # 14. TRY IT: after a request, open data/raw/reservations.json in your
-    #     editor and confirm it matches what Apaleo sent back.
-
-    # --- Part D: build a CSV from it (same as tasks/03_task.py) -------------
-
-    # 15. Read data/raw/reservations.json back with json.load(). Yes, this is
-    #     the same data you just wrote in Part C - that's intentional, see
-    #     the note at the top of this function and PROJECT.md.
-
-    # 16. Get the list of reservations out of it (it may be a plain list, or
-    #     wrapped under a "reservations" key - see get_reservation_list in
-    #     tasks/03_task.py).
-
-    # 17. Build one row dict per reservation with exactly these keys:
-    #     reservation_id, property_id, arrival, departure, adults, children,
-    #     status (mapped from the reservation's id, propertyId, arrival,
-    #     departure, adults, children, status fields).
-
-    # 18. Save the rows to data/processed/reservations.csv with
-    #     csv.DictWriter (create the "data/processed" folder first).
-
-    # 19. TRY IT: open data/processed/reservations.csv and confirm the rows
-    #     and header look right.
-
-    # --- Part E: load the CSV into MySQL (same as tasks/04_task.py) --------
-
-    # 20. Read data/processed/reservations.csv back into a list of dicts
-    #     with csv.DictReader.
-
-    # 21. Call load_dotenv(), then open a MySQL connection - copy the
-    #     connect() function from tasks/04_task.py.
-
-    # 22. Get a cursor from the connection: cursor = connection.cursor()
-
-    # 23. For each row, execute an
-    #     INSERT ... ON DUPLICATE KEY UPDATE statement (see tasks/04_task.py
-    #     for the exact SQL shape), then commit once all rows are done.
-
-    # 24. TRY IT: open http://localhost:8081 (Adminer), log in with the
+    # 12. TRY IT: open http://localhost:8081 (Adminer), log in with the
     #     credentials from your .env file, and check the "reservations"
     #     table now has rows in it.
 
-    # --- Part F: query MySQL for what was asked (same as tasks/05_task.py) -
+    # 13. Call get_db_reservations(hotel_code, date_from, date_to) to read
+    #     back exactly the hotel/date range that was asked for. Store it,
+    #     e.g. as `records`.
 
-    # 25. Using the same cursor, write and execute a SELECT statement: rows
-    #     where property_id = %s and arrival is between the from/to dates,
-    #     with (hotelCode, from_date, to_date) as the values.
+    # --- Part C: respond -----------------------------------------------------
 
-    # 26. Read the column names off cursor.description (one tuple per
-    #     column; the name is the first item in each tuple).
+    # 14. Return jsonify(records).
 
-    # 27. Zip the column names together with each row from
-    #     cursor.fetchall() to build one dict per reservation - same idea as
-    #     rows_to_dicts in tasks/05_task.py.
-
-    # --- Part G: clean up and respond ---------------------------------------
-
-    # 28. Close the cursor and the connection. Wrap steps 21-27 in a
-    #     try/finally so they still close even if something above raises.
-
-    # 29. Return jsonify(...) with your list of reservation dicts.
-
-    # 30. TRY IT: reload
+    # 15. TRY IT: reload
     #     http://localhost:5000/api/reservations?hotelCode=BER&from=2026-07-01&to=2026-07-03
     #     (use a hotel/date range you know has real Apaleo data) and confirm
     #     you get real reservations back as JSON. Then open
@@ -212,13 +173,24 @@ def get_reservations_demo():
         parsed_from = datetime.date.fromisoformat(date_from)
         parsed_to = datetime.date.fromisoformat(date_to)
     except ValueError:
-        return jsonify({"error": "'from' and 'to' must be dates in YYYY-MM-DD format."}), 400
+        return (
+            jsonify({"error": "'from' and 'to' must be dates in YYYY-MM-DD format."}),
+            400,
+        )
 
     if parsed_from > parsed_to:
-        return jsonify({"error": "The start date cannot be later than the end date."}), 400
+        return (
+            jsonify({"error": "The start date cannot be later than the end date."}),
+            400,
+        )
 
     if (parsed_to - parsed_from).days > MAX_RANGE_DAYS - 1:
-        return jsonify({"error": f"The date range can span at most {MAX_RANGE_DAYS} days."}), 400
+        return (
+            jsonify(
+                {"error": f"The date range can span at most {MAX_RANGE_DAYS} days."}
+            ),
+            400,
+        )
 
     records = get_db_reservations(property_id, date_from, date_to)
     return jsonify(records)
